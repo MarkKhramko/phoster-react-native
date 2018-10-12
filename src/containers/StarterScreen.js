@@ -5,6 +5,11 @@ import logo from '../assets/logo.png'
 
 class StarterScreen extends React.Component {
 
+  componentDidMount(){
+    let {navigate} = this.props.navigation
+    return navigate('LoginScreen', {})
+  }
+
   static navigationOptions = {
     header: null,
     elevation: null

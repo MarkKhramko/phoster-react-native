@@ -1,43 +1,62 @@
 import Axios from 'axios';
 import { AsyncStorage , Alert } from 'react-native';
+import * as APIConst from '../constants/API'
 
-export const Service = {
+export const Auth = {
     login,
-    register,
-    addTask,
-    getTasks,
-    removeTask,
-    editTask,
-    editState
+    register
 };
 
+function saveToken(token){
+    AsyncStorage.setItem('token', token);
+}
+
+function removeToken(){
+    AsyncStorage.removeItem('token');
+}
+
 function login(nickname, password) {
-    return Axios.post( defaultURL + 'Users/login', {
-        nickname: nickname,
+    const url = APIConst.LOGIN;
+    const data = {
+        username: nickname,
         password: password
-    })
-    .then(function(response){
-        AsyncStorage.setItem('token', response.data.id)
-        console.log(response)
-        return response
-    })
-    .catch(function (error) {
-        console.log(error);
-        Alert.alert('Неправильный логин или пароль!')
+    }
+
+    return new Promise((resolve, reject)=>{
+        Axios.post(url, data)
+        .then((response)=>{
+            saveToken(response.data.token);
+            return resolve(response);
+        })
+        .catch((error)=>{
+            return reject(error);
+        });
     });
 }
 
 function register(nickname, password) {
-    return Axios.post(defaultURL + 'Users' ,  { 
-        nickname: nickname,
+
+    const url = APIConst.REGISTER;
+    const data = {
+        username: nickname,
         password: password
-    })
-    .then(function(response){
-        console.log(response)
-        return response
-    })
-    .catch(function (error) {
-        console.log(error);
-        Alert.alert('Данный пользователь уже существует или введен неправильный nickname!')
-      });
+    }
+
+    return new Promise((resolve, reject)=>{
+        Axios.post(url, data)
+        .then((response)=>{
+            saveToken(response.data.token);
+            return resolve(response);
+        })
+        .catch((error)=>{
+            return reject(error);
+        });
+    });
 }
+
+// function logout() {
+//     return dispatch => {
+//         AsyncStorage.removeItem('token');
+//         dispatch(success())
+//         return true
+// }

@@ -10,9 +10,12 @@ import {
 import { HeaderBackButton } from "react-navigation"
 import { Actions } from '../actions/Actions'
 
+import GradientBackground from '../components/GradientBackground'
 import RoundedButton from '../components/RoundedButton'
 
-class Register extends React.Component {
+import { Auth } from '../services/Auth'
+
+class RegisterScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,39 +24,41 @@ class Register extends React.Component {
     };
   }
 
-  static navigationOptions = {
+   static navigationOptions = {
     headerStyle: {
-      backgroundColor: "#E91926",
+      backgroundColor: "#F79D33",
       borderBottomWidth: 0,
       elevation: null,
     },
-    headerTintColor: '#ffffff'
+    headerTintColor: '#fff'
   };
 
   _handleRegisterAction() {
-    let {navigate} = this.props.navigation
-    const { nick, password } = this.state;
-    console.log(nick, password); 
+    const { nickname, password } = this.state;
+    const { navigate } = this.props.navigation;
 
-    if (nick && password) {
-       Actions.register(nick, password)
-       .then(user => {
-            if (typeof (user) !== 'undefined') {
-              let {navigate} = this.props.navigation
-              return navigate('AuthScreen', {})
-            }
+    if(!!nickname && !!password) {
+      console.log("Регистрирую", nickname, password);
+      Auth
+      .register(nickname, password)
+      .then((response)=>{
+        if(!!response.data.token){
+          navigate('MainScreen', {})
         }
-    );
-    } else
-      Alert.alert('Поля не могут быть пустыми')
+      })
+      .catch((error)=>{
+        console.log(error);
+        Alert.alert('Данный пользователь уже существует или введен неправильный ник!')
+      });
+    } 
+    else{
+      Alert.alert('Заполните телефон и пароль!');
+    }
   }
 
   render() {
-    const {navigate} = this.props.navigation;
-    const {loggedIn}  = this.props;
-
     return (
-      <View style={styles.container}>
+      <GradientBackground style={styles.container}>
         <Text style={styles.hintTitle}>
           Для регистрации необходимо ввести ваш сотовый телефон.
         </Text>
@@ -71,9 +76,9 @@ class Register extends React.Component {
         <RoundedButton
           width="74%"
           onPress={this._handleRegisterAction.bind(this)}
-          title="Зарегестрироваться"
+          title="Зарегистрироваться"
         />
-      </View>
+      </GradientBackground>
     );
   }
 }
@@ -81,8 +86,7 @@ class Register extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#E91926'
+    alignItems: 'center'
   },
 
   hintTitle:{
@@ -120,4 +124,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Register);
+export default connect(mapStateToProps)(RegisterScreen);

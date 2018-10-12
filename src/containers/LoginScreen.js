@@ -9,49 +9,67 @@ import {
   View,
   AsyncStorage
 } from 'react-native'
-import { Actions } from '../actions/Actions'
-import { Service } from '../services/Service'
+import { LinearGradient } from 'expo'
 
+import { Auth } from '../services/Auth'
+
+import GradientBackground from '../components/GradientBackground'
 import RoundedButton from '../components/RoundedButton'
 
 
-class Login extends React.Component {
+class LoginScreen extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       nickname: '',
-      password: '',
+      password: ''
     };
   }
 
   static navigationOptions = {
+<<<<<<< HEAD:src/containers/Login.js
     header: null,
     elevation: null
+=======
+    headerStyle: {
+      backgroundColor: "#F79D33",
+      borderBottomWidth: 0,
+      elevation: null,
+    },
+    headerTintColor: '#fff'
+>>>>>>> 5941b65dfbab1033565bd605c2b37bb609348bc4:src/containers/LoginScreen.js
   };
 
   _handleLoginAction() {
-    let {navigate} = this.props.navigation
-    return navigate('MainScreen', {})
     const { nickname, password } = this.state;
-    const { dispatch } = this.props;
+    const { navigate } = this.props.navigation;
 
-    if (nickname && password) {
-      dispatch(Actions.login(nickname, password))
-      .then(task => {
-        let {navigate} = this.props.navigation
-        return navigate('NotesScreen', {})
+    if(!!nickname && !!password) {
+      console.log("Авторизую", nickname, password);
+      Auth
+      .login(nickname, password)
+      .then((response)=>{
+        console.log(response);
+        if(!!response.data.token){
+          
+          navigate('MainScreen', {})
+        }
       })
+      .catch((error)=>{
+        console.log(error);
+        Alert.alert('Введен неправильный пароль или ник!')
+      });
     } else {
-      Alert.alert('Поля не могут быть пустыми')} 
+      Alert.alert('Заполните телефон и пароль');
+    }
   }
   
   render() {
     const {navigate} = this.props.navigation;
-    const {loggedIn}  = this.props;
 
     return (
-      <View style={styles.container}>
+      <GradientBackground style={styles.container}>
         <Text style={styles.hintTitle}>
           Для входа необходимо ввести ваш сотовый телефон.
         </Text>
@@ -78,7 +96,7 @@ class Login extends React.Component {
           onPress={() => navigate('RegisterScreen', {})}
           title="Зарегестрироваться"
         />
-      </View>
+      </GradientBackground>
     );
   }
 }
@@ -87,8 +105,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+<<<<<<< HEAD:src/containers/Login.js
     paddingTop: 50,
     backgroundColor: '#E91926'
+=======
+>>>>>>> 5941b65dfbab1033565bd605c2b37bb609348bc4:src/containers/LoginScreen.js
   },
 
   hintTitle:{
@@ -127,4 +148,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Login);
+export default connect(mapStateToProps)(LoginScreen);
