@@ -4,6 +4,11 @@ import { LinearGradient } from 'expo';
 
 class StarterScreen extends React.Component {
 
+  componentDidMount(){
+    let {navigate} = this.props.navigation
+    return navigate('LoginScreen', {})
+  }
+
   static navigationOptions = {
     header: null,
     elevation: null

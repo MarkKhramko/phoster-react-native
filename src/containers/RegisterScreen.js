@@ -1,22 +1,21 @@
-import React from 'react'
+import React from 'react';
 import { connect } from 'react-redux'
 import { 
   Alert,
-  Flatlist,
   StyleSheet,
   Text,
   TextInput,
-  View,
-  AsyncStorage
-} from 'react-native'
+  View
+} from 'react-native';
+import { HeaderBackButton } from "react-navigation"
 import { Actions } from '../actions/Actions'
-import { Service } from '../services/Service'
 
+import GradientBackground from '../components/GradientBackground'
 import RoundedButton from '../components/RoundedButton'
 
+import { Auth } from '../services/Auth'
 
-class Login extends React.Component {
-
+class RegisterScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,42 +24,46 @@ class Login extends React.Component {
     };
   }
 
-  static navigationOptions = {
+   static navigationOptions = {
     headerStyle: {
-      backgroundColor: "#E91926",
+      backgroundColor: "#F79D33",
       borderBottomWidth: 0,
       elevation: null,
     },
+    headerTintColor: '#fff'
   };
 
-  _handleLoginAction() {
-    let {navigate} = this.props.navigation
-    return navigate('MainScreen', {})
+  _handleRegisterAction() {
     const { nickname, password } = this.state;
-    const { dispatch } = this.props;
+    const { navigate } = this.props.navigation;
 
-    if (nickname && password) {
-      dispatch(Actions.login(nickname, password))
-      .then(task => {
-        let {navigate} = this.props.navigation
-        return navigate('NotesScreen', {})
+    if(!!nickname && !!password) {
+      console.log("Регистрирую", nickname, password);
+      Auth
+      .register(nickname, password)
+      .then((response)=>{
+        if(!!response.data.token){
+          navigate('MainScreen', {})
+        }
       })
-    } else {
-      Alert.alert('Поля не могут быть пустыми')} 
+      .catch((error)=>{
+        console.log(error);
+        Alert.alert('Данный пользователь уже существует или введен неправильный ник!')
+      });
+    } 
+    else{
+      Alert.alert('Заполните телефон и пароль!');
+    }
   }
-  
-  render() {
-    const {navigate} = this.props.navigation;
-    const {loggedIn}  = this.props;
 
+  render() {
     return (
-      <View style={styles.container}>
+      <GradientBackground style={styles.container}>
         <Text style={styles.hintTitle}>
-          Для входа необходимо ввести ваш сотовый телефон.
+          Для регистрации необходимо ввести ваш сотовый телефон.
         </Text>
         <TextInput
           style={styles.inputField}
-          underlineColorAndroid='transparent'
           placeholder="+7-999-999-99-99"
           onChangeText={(nickname) => this.setState({nickname})}
         />
@@ -71,17 +74,11 @@ class Login extends React.Component {
           onChangeText={(password) => this.setState({password})}
         />
         <RoundedButton
-          width="60%"
-          onPress={this._handleLoginAction.bind(this)}
-          title="Войти"
-        />
-
-        <RoundedButton
           width="74%"
-          onPress={() => navigate('RegisterScreen', {})}
-          title="Зарегестрироваться"
+          onPress={this._handleRegisterAction.bind(this)}
+          title="Зарегистрироваться"
         />
-      </View>
+      </GradientBackground>
     );
   }
 }
@@ -89,8 +86,7 @@ class Login extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#E91926'
+    alignItems: 'center'
   },
 
   hintTitle:{
@@ -120,13 +116,12 @@ const styles = StyleSheet.create({
   }
 });
 
- 
 function mapStateToProps(state) {
- const { loggedIn, logout } = state.auth;
+  const { registeredSuccess} = state.register;
+
   return {
-   loggedIn,
-   logout
+      registeredSuccess,
   };
 }
 
-export default connect(mapStateToProps)(Login);
+export default connect(mapStateToProps)(RegisterScreen);

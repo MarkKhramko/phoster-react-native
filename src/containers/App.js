@@ -8,13 +8,13 @@ import ShowPhoto from './ShowPhoto'
 
 // Auth
 import StarterScreen from './StarterScreen'
-import Login from './Login'
-import Register from './Register'
+import LoginScreen from './LoginScreen'
+import RegisterScreen from './RegisterScreen'
 
 const App = createStackNavigator({
   StarterScreen: { screen: StarterScreen},
-  AuthScreen: { screen: Login },
-  RegisterScreen: { screen: Register },
+  LoginScreen: { screen: LoginScreen },
+  RegisterScreen: { screen: RegisterScreen },
   MainScreen: { screen: MainScreen },
   TakePhotoScreen: { screen: TakePhoto },
   ShowPhotoScreen: { screen: ShowPhoto },
