@@ -26,11 +26,8 @@ class Login extends React.Component {
   }
 
   static navigationOptions = {
-    headerStyle: {
-      backgroundColor: "#E91926",
-      borderBottomWidth: 0,
-      elevation: null,
-    },
+    header: null,
+    elevation: null
   };
 
   _handleLoginAction() {
@@ -90,6 +87,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    paddingTop: 50,
     backgroundColor: '#E91926'
   },
 

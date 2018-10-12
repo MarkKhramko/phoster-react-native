@@ -1,7 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View , TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View , TouchableOpacity, Image, Form } from 'react-native';
 import { Camera, Permissions } from 'expo';
 import { connect } from 'react-redux'
+import flip from '../assets/flip_camera.png'
+import flash from '../assets/flash_enable.png'
+import photo from '../assets/take_photo.png'
 
 class TakePhoto extends React.Component {
   constructor(props) {
@@ -20,7 +23,7 @@ class TakePhoto extends React.Component {
   static navigationOptions = ({navigation}) => ({
     headerTitle: 'Фото',
     headerStyle: {
-      backgroundColor: "crimson"
+      backgroundColor: "#FC4A1A"
     },
     headerTitleStyle: { 
       color: 'white', 
@@ -31,8 +34,17 @@ class TakePhoto extends React.Component {
     }
   })
 
+  takePicture = () => {
+    if (this.camera) {
+        this.camera.takePictureAsync()
+            .then(data => this.props.navigation.goBack())
+    }
+  }
+
   render() {
     const { hasCameraPermission } = this.state;
+    let { type, flashMode} = this;
+
     if (hasCameraPermission === null) {
       return <View />;
     } else if (hasCameraPermission === false) {
@@ -40,7 +52,7 @@ class TakePhoto extends React.Component {
     } else {
       return (
         <View style={{ flex: 1 }}>
-          <Camera style={{ height: 360 }} type={this.state.type}>
+          <Camera style={{ height: 360 }} {...{type, flashMode}}>
             <View
               style={{
                 flex: 1,
@@ -51,9 +63,28 @@ class TakePhoto extends React.Component {
           </Camera>
           <TouchableOpacity
             style={{
-              flex: 0.1,
-              alignSelf: 'flex-end',
+              flex: 1,
+              right: 0,
+              left: 0,
+              bottom: 0,
+              position: 'absolute',
               alignItems: 'center',
+              paddingBottom: 17
+            }}
+            onPress={() => { this.takePicture }}>
+            <Image
+              style={{width: 160, height: 160}}
+              source={photo}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              left: 0,
+              bottom: 0,
+              position: 'absolute',
+              alignItems: 'center',
+              paddingBottom: 36
             }}
             onPress={() => {
               this.setState({
@@ -62,10 +93,31 @@ class TakePhoto extends React.Component {
                   : Camera.Constants.Type.back,
               });
             }}>
-            <Text
-              style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
-              {' '}Flip{' '}
-            </Text>
+            <Image
+              style={{width: 100, height: 100}}
+              source={flash}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              right: 0,
+              bottom: 0,
+              position: 'absolute',
+              alignItems: 'center',
+              paddingBottom: 36
+            }}
+            onPress={() => {
+              this.setState({
+                type: this.state.type === Camera.Constants.Type.back
+                  ? Camera.Constants.Type.front
+                  : Camera.Constants.Type.back,
+              });
+            }}>
+            <Image
+              style={{width: 100, height: 100}}
+              source={flip}
+            />
           </TouchableOpacity>
         </View>
       );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View , AsyncStorage, FlatList, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View , AsyncStorage, FlatList, TouchableOpacity, Image, Text } from 'react-native';
 import { Actions } from '../actions/Actions'
 import { connect } from 'react-redux'
 import addImg from '../assets/add_photo.png'
@@ -51,7 +51,7 @@ class MainScreen extends React.Component {
   static navigationOptions = ({navigation}) => ({
     headerTitle: 'Лента',
     headerStyle: {
-      backgroundColor: "crimson"
+      backgroundColor: "#FC4A1A"
     },
     headerTitleStyle: { 
       color: 'white', 
