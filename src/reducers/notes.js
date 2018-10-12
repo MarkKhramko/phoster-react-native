@@ -14,6 +14,7 @@ const initialState = {
     title: '',
     body: '',
     id: '',
+    link: '',
     done: false,
 };
 
@@ -81,9 +82,7 @@ export function tasks (state = initialState, action) {
         case userConst.SELECT_TASK:
             return {
                 ...state,
-                title: action.title,
-                body: action.body,
-                done: action.done,
+                link: action.link,
                 id: action.id
             }      
         default:

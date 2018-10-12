@@ -1,75 +1,75 @@
 import React from 'react';
-import { Alert, StyleSheet, Text, TextInput, Button, View , AsyncStorage } from 'react-native';
-import { Actions } from '../actions/Actions'
+import { Alert, StyleSheet, Text, TextInput, Button, View , TouchableOpacity } from 'react-native';
+import { Camera, Permissions } from 'expo';
 import { connect } from 'react-redux'
 
 class NewTask extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        title: '',
-        body: '',
-        done: false,
+      hasCameraPermission: null,
+      type: Camera.Constants.Type.back,
     };
   }
 
-  static navigationOptions = {
-    headerStyle: {
-      backgroundColor: "aquamarine",
-      elevation: null
-    },
-  };
-
-  onBtnAddTask(e) {
-    e.preventDefault();
-    const { title , body , done } = this.state;
-    const { dispatch } = this.props;
-  
-      AsyncStorage.getItem('token').then((response) => {
-         console.log('tokeNN',response);
-         if (title && body && response) {
-          dispatch(Actions.addTask(response, title, body , done))
-          .then(
-            task => {
-              let {navigate} = this.props.navigation
-              dispatch(Actions.getTasks(response)).then(
-                tasks => {
-                  return navigate('NotesScreen', {})
-              })
-            }
-          )} else 
-          Alert.alert('Поля не могут быть пустыми')
-      });
+  async componentWillMount() {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({ hasCameraPermission: status === 'granted' });
   }
 
+  static navigationOptions = ({navigation}) => ({
+    headerTitle: 'Фото',
+    headerStyle: {
+      backgroundColor: "crimson"
+    },
+    headerTitleStyle: { 
+      color: 'white', 
+      alignSelf: 'center',
+      textAlign: 'center',
+      marginLeft: 85,
+      fontSize: 28
+    }
+  })
+
   render() {
-    console.log('PropsAddRequest', this.props.addRequest)
-    console.log('PropsAddSucces', this.props.addSuccess)
-    
-    return (
-      <View style={styles.container}>
-        <Text style={styles.header}>NOTES</Text>
-        <Text>Добавление заметки</Text>
-        <TextInput
-            style={styles.inputbox}
-            placeholder="Название"
-            onChangeText={(title) => this.setState({title})}
-        />
-        <TextInput
-            style={styles.inputbox} 
-            multiline = {true}
-            placeholder="Что вы хотели записать?"
-            onChangeText={(body) => this.setState({body})}
-        />
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={this.onBtnAddTask.bind(this)}
-            title="Добавить заметку"
-            color="#ce452d"
-          />
+    const { hasCameraPermission } = this.state;
+    if (hasCameraPermission === null) {
+      return <View />;
+    } else if (hasCameraPermission === false) {
+      return <Text>No access to camera</Text>;
+    } else {
+      return (
+        <View style={{ flex: 1 }}>
+          <Camera style={{ height: 360 }} type={this.state.type}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'transparent',
+                flexDirection: 'row',
+              }}>
+            </View>
+          </Camera>
+          <TouchableOpacity
+            style={{
+              flex: 0.1,
+              alignSelf: 'flex-end',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              this.setState({
+                type: this.state.type === Camera.Constants.Type.back
+                  ? Camera.Constants.Type.front
+                  : Camera.Constants.Type.back,
+              });
+            }}>
+            <Text
+              style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
+              {' '}Flip{' '}
+            </Text>
+          </TouchableOpacity>
         </View>
-      </View>
-    );
+      );
+    }
   }
 }
 
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'aquamarine',
+    backgroundColor: '#E5E5E5',
   },
   header: {
     color: '#f1841e',

@@ -13,7 +13,7 @@ export const Actions = {
     addTask,
     changeTaskBody,
     changeTaskTitle,
-    editSelectTask
+    showSelectImage
 };
 
 function register(email, password) {{
@@ -189,11 +189,11 @@ function success(response) { return { type: userConst.ADD_SUCCESS, response } }
 function failure(error) { return { type: userConst.ADD_FAILURE, error } }
 }
 
-function editSelectTask(title, body, done, id) {
+function showSelectImage(link, id) {
     return dispatch => {
-        dispatch(selectTask(title, body, done, id))
+        dispatch(selectImage(link, id))
     }
-function selectTask(title, body, done, id) { return { type: userConst.SELECT_TASK, title, body, done, id}}   
+function selectImage(link, id) { return { type: userConst.SELECT_TASK, link, id}}   
 }
 
 function changeTaskTitle(title) {

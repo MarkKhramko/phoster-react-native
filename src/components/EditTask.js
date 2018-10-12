@@ -1,117 +1,82 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Alert, StyleSheet, Text, TextInput, Button, View , AsyncStorage } from 'react-native';
-import { Actions } from '../actions/Actions'
-import UndoRedo from '../containers/UndoRedo'
-import { HeaderBackButton } from 'react-navigation'
-import { ActionCreators as UndoActionCreators } from 'redux-undo';
+import { StyleSheet, View, TouchableOpacity, Image} from 'react-native';
+import { MapView } from 'expo';
+import like_disable from '../assets/like_disable.png'
+import like_enable from '../assets/like_enable.png'
 
 class EditTask extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-        title: this.props.title,
-        body: this.props.body,
-        done: this.props.done,
-        id: this.props.id,
-        taskChanged: false,
+      like: false
     };
   }
 
-  componentDidMount(){
-    this.props.navigation.setParams({ isBack: this.onBackBtnClick });
-  }
-
-
   static navigationOptions = ({navigation}) => ({
-    headerLeft: (<HeaderBackButton onPress={navigation.getParam('isBack')}/>),
-    headerStyle: {
-      backgroundColor: "aquamarine",
-      elevation: null
-    },
+    title:"showImage",
+    header: null
   });
 
-  changeTaskTitle = (title) => {
-    const { dispatch } = this.props;
-
-    dispatch(Actions.changeTaskTitle(title))
-    this.state.taskChanged = true;
+  pushLike = () => {
+    let { like } = this.state.like
+    console.log("123")
+    if (this.state.like == true) {
+      this.setState({ like, like: false })
+    }
+    else
+      this.setState({ like, like: true })
   }
-
-  changeTaskBody = (body) => {
-    const { dispatch } = this.props;
-
-    dispatch(Actions.changeTaskBody(body)) 
-    this.state.taskChanged = true;
-  }
-
-
-  onBtnSaveTask() {
-    let { title, body, id, done } = this.props
-    const { dispatch } = this.props;
   
-    console.log(title, body, id, done , 'PROPS SAVE TASK')
-      AsyncStorage.getItem('token').then((response) => {
-        Actions.editTask(title, body, id, done, response)
-        .then(
-            task => {
-              let {navigate} = this.props.navigation
-              dispatch(Actions.getTasks(response)).then(
-                tasks => {
-                  //UndoActionCreators.clearHistory()
-                  return navigate('NotesScreen', {})
-              })
-          })
-      });
-  }
-
-  onBackBtnClick = () =>{
-    let {navigate} = this.props.navigation
-  
-    if (this.state.taskChanged){
-      Alert.alert(
-        'Сохранить изменения?',
-        '',
-        [
-          {text: 'Cancel', onPress: () => navigate('NotesScreen'), style: 'cancel'},
-          {text: 'OK', onPress: () => this.onBtnSaveTask()},
-        ],
-        { cancelable: false }
-      )
-    } else {
-      return navigate('NotesScreen')
-    }  
-  }  
 
   render() {
-    let { title, body, id, done } = this.props
+    let { link, id } = this.props
+    console.log(id, link)
+    console.log(this.state.like)
 
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>NOTES</Text>
-        <Text>Редактирование заметки</Text>
-        <TextInput
-            style={styles.inputbox}
-            placeholder="Название"
-            defaultValue= {title}
-            onChangeText={(title) => this.changeTaskTitle(title)}
-        />
-        <TextInput
-            style={styles.inputbox} 
-            multiline = {true}
-            defaultValue= {body}
-            placeholder="Что вы хотели записать?"
-            onChangeText={(body) => this.changeTaskBody(body)}
-        />
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={this.onBtnSaveTask.bind(this)}
-            title="Cохранить"
-            color="coral"
-          />
-        </View>
-        <UndoRedo />
+        <View style={{}}>
+          <TouchableOpacity onPress={() => { console.log("dasd") }}>
+            <Image
+              style={{width: 360, height: 360}}
+              source={{uri: link}}
+            />
+          </TouchableOpacity>
+          <View style={styles.line}/>
+          <MapView
+            style={{ flex: 1 }}
+            initialRegion={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.1522,
+              longitudeDelta: 0.0521,
+            }}
+          >
+            <MapView.Marker
+              coordinate={{latitude: 38.73538,
+              longitude: -122.4324,}}
+              title={"Маркер"}
+              description={"Место снимка"}
+            />
+          </MapView>
+          <TouchableOpacity style={styles.opaciti} onPress={() => { this.pushLike() }}>
+            {this.state.like == true  && (
+              <Image 
+              style={styles.btn}
+              source={like_enable}
+            />
+            )}
+            {this.state.like == false && (
+              <Image 
+              style={styles.btn}
+              source={like_disable} 
+            />
+            )}
+            
+          </TouchableOpacity>  
+      </View> 
       </View>
     );
   }
@@ -121,7 +86,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'aquamarine',
+    backgroundColor: '#E5E5E5',
   },
   header: {
     color: '#f1841e',
@@ -131,23 +96,27 @@ const styles = StyleSheet.create({
     marginBottom: 110,
     shadowColor: '#f8983f',
   },
-  inputbox: {
-    padding: 5,
-    width: 200,
+  line: {
+    borderBottomColor: '#E91926',
+    borderBottomWidth: 2
   },
-  buttonContainer: {
-    marginTop: 7,
-    marginBottom: 5,
+  opaciti:{
+    position: "absolute",
+    bottom: 0,
+    marginLeft: 140
+  },
+  btn:{
+    width:80,
+    height:80,
+    borderRadius:30
   },
 });
 
 function mapStateToProps(state) {
-  const { title, body, id, done } = state.tasks;
+  const { link, id } = state.tasks;
   return {
-    title,
-    body,
+    link,
     id,
-    done
   };
 }
 
