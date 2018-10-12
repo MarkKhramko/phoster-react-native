@@ -6,13 +6,8 @@ export const Actions = {
     login,
     logout,
     register,
-    getTasks,
-    removeTask,
-    editTask,
-    editState,
-    addTask,
-    changeTaskBody,
-    changeTaskTitle,
+    getPhotos,
+    addPhoto,
     showSelectImage
 };
 
@@ -64,7 +59,7 @@ function login(email, password) {
     function failure(error) { return { type: userConst.LOGIN_FAILURE, error } }
 }
 
-function getTasks(token) {
+function getPhotos(token) {
     return dispatch => {
         dispatch(request());
 
@@ -88,83 +83,7 @@ function success(tasks) { return { type: userConst.GET_SUCCESS, tasks } }
 function failure(error) { return { type: userConst.GET_FAILURE, error } }
 }
 
-
-function removeTask(token, id) {{
-    request();
-
-    return Service.removeTask(token, id)
-        .then(
-            response => {
-                console.log(response)
-                if (typeof (response) !== 'undefined') {
-                    success(id);
-                    return response
-                }
-            },
-            error => {
-                failure(error);
-                console.log(error)
-
-            }
-        );
-}
-
-function request() { return { type: userConst.REMOVE_REQUEST } }
-function success(id) { return { type: userConst.REMOVE_SUCCESS, id } }
-function failure(error) { return { type: userConst.REMOVE_FAILURE, error } }
-}
-
-
-function editTask(title, body, id, done, token) {{
-    request();
-
-    return Service.editTask(title, body, id, done, token)
-        .then(
-            response => {
-                console.log(response)
-                if (typeof (response) !== 'undefined') {
-                    success(response);
-                    return response
-                }
-            },
-            error => {
-                failure(error);
-                console.log(error)
-            }
-        );
-}
-
-function request() { return { type: userConst.EDIT_REQUEST } }
-function success(response) { return { type: userConst.EDIT_SUCCESS, response } }
-function failure(error) { return { type: userConst.EDIT_FAILURE, error } }
-}
-
-
-function editState(title, body, done, id , token) {{
-    request();
-
-    return Service.editState(title, body, done, id , token)
-        .then(
-            response => {
-                console.log(response)
-                if (typeof (response) !== 'undefined') {
-                    success(response);
-                    return response
-                }
-            },
-            error => {
-                failure(error);
-                console.log(error)
-            }
-        );
-}
-
-function request() { return { type: userConst.STATE_REQUEST } }
-function success(response) { return { type: userConst.STATE_SUCCESS, response } }
-function failure(error) { return { type: userConst.STATE_FAILURE, error } }
-}
-
-function addTask(token, title, body, done ) {
+function addPhoto(token, title, body, done ) {
     return dispatch => {
         dispatch(request());
 
@@ -194,20 +113,6 @@ function showSelectImage(link, id) {
         dispatch(selectImage(link, id))
     }
 function selectImage(link, id) { return { type: userConst.SELECT_TASK, link, id}}   
-}
-
-function changeTaskTitle(title) {
-    return dispatch => {
-        dispatch(showTaskAction(title))
-    }
-function showTaskAction(title) { return { type: userConst.CHANGE_TITLE, title } }
-}
-
-function changeTaskBody(body) {
-    return dispatch => {
-        dispatch(showTaskAction(body))
-    }  
-function showTaskAction(body) { return { type: userConst.CHANGE_BODY, body } }
 }
 
 function logout() {

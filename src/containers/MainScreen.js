@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import addImg from '../assets/add_photo.png'
 import iconLogOut from '../assets/icon_logout.png'
 
-console.ignoredYellowBox = ['Remote debugger'];
+console.ignoredYellowBox = ['Remote debugger', 'Debugger and device'];
 
 class MainScreen extends React.Component {
   constructor(props) {
@@ -17,8 +17,12 @@ class MainScreen extends React.Component {
           id: "0",
         },
         {
-          link: "https://facebook.github.io/react-native/docs/assets/favicon.png",
+          link: "https://wpp.azureedge.net/sites/default/files/styles/gallery_main_image/public/hviofv7y64ywr2sk1ju5.jpg?itok=915b_CWI",
           id: "1",
+        },
+        {
+          link: "https://icdn3.digitaltrends.com/image/photographer-ted-hesser-viral-eclipse-photo-of-the-century.jpg",
+          id: "2",
         }],
         refreshing: false
         }       

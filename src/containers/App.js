@@ -7,13 +7,14 @@ import MainScreen from './MainScreen'
 import ShowPhoto from './ShowPhoto'
 
 // Auth
-import Login from '../containers/Login'
-import Register from '../containers/Register'
+import StarterScreen from './StarterScreen'
+import Login from './Login'
+import Register from './Register'
 
 const App = createStackNavigator({
+  StarterScreen: { screen: StarterScreen},
   AuthScreen: { screen: Login },
   RegisterScreen: { screen: Register },
-
   MainScreen: { screen: MainScreen },
   TakePhotoScreen: { screen: TakePhoto },
   ShowPhotoScreen: { screen: ShowPhoto },
