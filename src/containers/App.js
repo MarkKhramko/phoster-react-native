@@ -1,9 +1,10 @@
 import React from 'react';
 import {createStackNavigator} from 'react-navigation'
 
-import NewTask from '../components/NewTask'
-import Notes from '../components/Notes'
-import EditTask from '../components/EditTask'
+// Photos
+import TakePhoto from './TakePhoto'
+import MainScreen from './MainScreen'
+import ShowPhoto from './ShowPhoto'
 
 // Auth
 import Login from '../containers/Login'
@@ -13,9 +14,9 @@ const App = createStackNavigator({
   AuthScreen: { screen: Login },
   RegisterScreen: { screen: Register },
 
-  NotesScreen: { screen: Notes },
-  NewTaskScreen: { screen: NewTask },
-  EditTaskScreen: { screen: EditTask },
+  MainScreen: { screen: MainScreen },
+  TakePhotoScreen: { screen: TakePhoto },
+  ShowPhotoScreen: { screen: ShowPhoto },
 });
 
 export default App;

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Alert, StyleSheet, Text, TextInput, Button, View , TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View , TouchableOpacity } from 'react-native';
 import { Camera, Permissions } from 'expo';
 import { connect } from 'react-redux'
 
-class NewTask extends React.Component {
+class TakePhoto extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  const {addRequest, addSuccess } = state.tasks;
+  const {addRequest, addSuccess } = state.photos;
 
   return {
       addRequest,
@@ -106,5 +106,5 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedNewTaskPage = connect(mapStateToProps)(NewTask);
-export default connectedNewTaskPage;
+const connectedTakePhoto = connect(mapStateToProps)(TakePhoto);
+export default connectedTakePhoto;

@@ -1,14 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View , AsyncStorage, FlatList, TouchableOpacity, Image, ImageBackground, Icon } from 'react-native';
+import { StyleSheet, View , AsyncStorage, FlatList, TouchableOpacity, Image } from 'react-native';
 import { Actions } from '../actions/Actions'
 import { connect } from 'react-redux'
-import { HeaderBackButton } from 'react-navigation'
 import addImg from '../assets/add_photo.png'
 import iconLogOut from '../assets/icon_logout.png'
 
 console.ignoredYellowBox = ['Remote debugger'];
 
-class Notes extends React.Component {
+class MainScreen extends React.Component {
   constructor(props) {
       super(props);
       
@@ -61,17 +60,12 @@ class Notes extends React.Component {
     
   })
 
-  btnAddNewTask(){
-    let {navigate} = this.props.navigation
-    return navigate('NewTaskScreen', {})
-  }
-
 showImage = (link, id) => {
   const { dispatch } = this.props;
   let {navigate} = this.props.navigation
   
   dispatch(Actions.showSelectImage(link, id))
-  return navigate('EditTaskScreen',)
+  return navigate('ShowPhotoScreen',)
 }
 
 // _onRefresh() {
@@ -106,7 +100,7 @@ showImage = (link, id) => {
         }
         keyExtractor = {(item, index) => index.toString()}
         />
-        <TouchableOpacity style={styles.opaciti} onPress={() => { navigate('NewTaskScreen',)}}>
+        <TouchableOpacity style={styles.opaciti} onPress={() => { navigate('TakePhotoScreen',)}}>
           <Image 
             style={styles.btn}
             source={addImg}
@@ -123,37 +117,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#E5E5E5',
   },
-  header: {
-    color: '#f1841e',
-    fontWeight: 'bold',
-    fontSize: 30,
-    marginBottom: 10,
-    shadowColor: '#f8983f',
-  },
-  inputbox: {
-    padding: 5,
-    width: 200,
-  },
-  buttonContainer: {
-    marginTop: 7,
-    marginBottom: 5,
-  },
-  MainContainer: {
-    flex: 1,
-    margin: 10
-  },
-  TextStyle:{
-    fontSize : 25,
-    textAlign: 'center'
-  },
-  body:{
-    fontWeight: "200",
-    fontSize: 14,
-    padding: 30,
-    backgroundColor: 'white',
-    marginBottom: 5,
-    color: 'black'
-  },
   btn:{
     width:80,
     height:80,
@@ -166,14 +129,14 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  const { tasks } = state.tasks;
+  const { photos } = state.photos;
 
   return {
-    tasks
+    photos
   };
 }
 
-const connectedNotesPage = connect(mapStateToProps)(Notes);
-export default connectedNotesPage;
+const connectedMainScreen = connect(mapStateToProps)(MainScreen);
+export default connectedMainScreen;
 
 

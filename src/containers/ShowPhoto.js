@@ -5,7 +5,7 @@ import { MapView } from 'expo';
 import like_disable from '../assets/like_disable.png'
 import like_enable from '../assets/like_enable.png'
 
-class EditTask extends React.Component {
+class ShowPhoto extends React.Component {
   constructor(props) {
     super(props);
 
@@ -113,12 +113,12 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  const { link, id } = state.tasks;
+  const { link, id } = state.photos;
   return {
     link,
     id,
   };
 }
 
-const connectedEditTask = connect(mapStateToProps)(EditTask);
-export default connectedEditTask;
+const connectedShowPhoto = connect(mapStateToProps)(ShowPhoto);
+export default connectedShowPhoto;

@@ -1,13 +1,12 @@
 import { combineReducers } from 'redux'
-import {auth} from '../reducers/auth'
-import {register} from '../reducers/register'
-import {tasks} from '../reducers/notes';
-import undoable from 'redux-undo';
+import { auth } from '../reducers/auth'
+import { register } from '../reducers/register'
+import { photos } from '../reducers/photos';
 
 const rootReducer = combineReducers({ 
     auth,
     register,
-    tasks
+    photos
 }) 
 
 export default rootReducer

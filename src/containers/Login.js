@@ -34,7 +34,8 @@ class Login extends React.Component {
   };
 
   _handleLoginAction() {
-    
+    let {navigate} = this.props.navigation
+    return navigate('MainScreen', {})
     const { nickname, password } = this.state;
     const { dispatch } = this.props;
 
@@ -59,6 +60,7 @@ class Login extends React.Component {
         </Text>
         <TextInput
           style={styles.inputField}
+          underlineColorAndroid='transparent'
           placeholder="+7-999-999-99-99"
           onChangeText={(nickname) => this.setState({nickname})}
         />
