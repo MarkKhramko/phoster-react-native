@@ -37,11 +37,13 @@ class TakePhoto extends React.Component {
     }
   })
 
-  takePicture = () => {
+  _takePicture = () => {
+    console.log('Check');
     if (this.camera) {
       this.camera
       .takePictureAsync()
       .then((data) =>{
+        console.log({data});
         this.props.navigation.goBack()
       });
     }
@@ -63,6 +65,7 @@ class TakePhoto extends React.Component {
           <Camera 
             style={ styles.camera }
             {...{type, flashMode}}
+            ref={(cam)=>{ this.camera = cam; }}
           >
             <View
               style={{
@@ -82,7 +85,7 @@ class TakePhoto extends React.Component {
               alignItems: 'center',
               paddingBottom: 17
             }}
-            onPress={() => { this.takePicture }}>
+            onPress={() => { this._takePicture() }}>
             <Image
               style={{width: 160, height: 160}}
               source={photo}
