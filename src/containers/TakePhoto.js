@@ -21,23 +21,29 @@ class TakePhoto extends React.Component {
   }
 
   static navigationOptions = ({navigation}) => ({
-    headerTitle: 'Фото',
     headerStyle: {
-      backgroundColor: "#FC4A1A"
+      backgroundColor: "#F79D33",
+      borderBottomWidth: 0,
+      elevation: null,
     },
+    headerTintColor: '#fff',
+
+    headerTitle: 'Фото',
     headerTitleStyle: { 
       color: 'white', 
       alignSelf: 'center',
       textAlign: 'center',
-      marginLeft: 85,
       fontSize: 28
     }
   })
 
   takePicture = () => {
     if (this.camera) {
-        this.camera.takePictureAsync()
-            .then(data => this.props.navigation.goBack())
+      this.camera
+      .takePictureAsync()
+      .then((data) =>{
+        this.props.navigation.goBack()
+      });
     }
   }
 
@@ -47,12 +53,17 @@ class TakePhoto extends React.Component {
 
     if (hasCameraPermission === null) {
       return <View />;
-    } else if (hasCameraPermission === false) {
-      return <Text>No access to camera</Text>;
-    } else {
+    } 
+    else if (hasCameraPermission === false) {
+      return <Text>Разрешите доступ к камере в настройках телефона.</Text>;
+    } 
+    else {
       return (
-        <View style={{ flex: 1 }}>
-          <Camera style={{ height: 360 }} {...{type, flashMode}}>
+        <View style={ styles.container }>
+          <Camera 
+            style={ styles.camera }
+            {...{type, flashMode}}
+          >
             <View
               style={{
                 flex: 1,
@@ -127,36 +138,21 @@ class TakePhoto extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#E5E5E5',
+    flex: 1
   },
-  header: {
-    color: '#f1841e',
-    fontWeight: 'bold',
-    fontSize: 30,
-    paddingTop: 50,
-    marginBottom: 110,
-    shadowColor: '#f8983f',
-  },
-  inputbox: {
-    padding: 5,
-    width: 200,
-  },
-  buttonContainer: {
-    marginTop: 7,
-    marginBottom: 5,
-  },
+
+  camera: { 
+    height: 360 
+  }
 });
 
 function mapStateToProps(state) {
   const {addRequest, addSuccess } = state.photos;
 
   return {
-      addRequest,
-      addSuccess
+    addRequest,
+    addSuccess
   };
 }
 
-const connectedTakePhoto = connect(mapStateToProps)(TakePhoto);
-export default connectedTakePhoto;
+export default connect(mapStateToProps)(TakePhoto);

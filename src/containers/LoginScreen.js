@@ -27,18 +27,21 @@ class LoginScreen extends React.Component {
     };
   }
 
+  componentWillMount(){
+    const token = Auth.getToken();
+    if(!!token){
+      const { navigate } = this.props.navigation;
+      navigate('MainScreen', {});
+    }
+  }
+
   static navigationOptions = {
-<<<<<<< HEAD:src/containers/Login.js
-    header: null,
-    elevation: null
-=======
     headerStyle: {
       backgroundColor: "#F79D33",
       borderBottomWidth: 0,
       elevation: null,
     },
     headerTintColor: '#fff'
->>>>>>> 5941b65dfbab1033565bd605c2b37bb609348bc4:src/containers/LoginScreen.js
   };
 
   _handleLoginAction() {
@@ -105,11 +108,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-<<<<<<< HEAD:src/containers/Login.js
-    paddingTop: 50,
-    backgroundColor: '#E91926'
-=======
->>>>>>> 5941b65dfbab1033565bd605c2b37bb609348bc4:src/containers/LoginScreen.js
   },
 
   hintTitle:{

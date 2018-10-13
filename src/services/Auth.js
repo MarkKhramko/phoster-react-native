@@ -2,16 +2,16 @@ import Axios from 'axios';
 import { AsyncStorage , Alert } from 'react-native';
 import * as APIConst from '../constants/API'
 
-export const Auth = {
-    login,
-    register
-};
-
 function saveToken(token){
     AsyncStorage.setItem('token', token);
 }
 
-function removeToken(){
+function getToken(){
+    const token = AsyncStorage.getItem('token');
+    return token;
+}
+
+function logout(){
     AsyncStorage.removeItem('token');
 }
 
@@ -53,6 +53,14 @@ function register(nickname, password) {
         });
     });
 }
+
+export const Auth = {
+    login,
+    register,
+
+    getToken,
+    logout
+};
 
 // function logout() {
 //     return dispatch => {

@@ -1,7 +1,18 @@
 import React from 'react';
-import { StyleSheet, View , AsyncStorage, FlatList, TouchableOpacity, Image, Text } from 'react-native';
+import { 
+  StyleSheet, 
+  View, 
+  AsyncStorage,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  Text
+} from 'react-native';
 import { Actions } from '../actions/Actions'
 import { connect } from 'react-redux'
+
+import { Auth } from '../services/Auth'
+
 import addImg from '../assets/add_photo.png'
 import iconLogOut from '../assets/icon_logout.png'
 
@@ -9,10 +20,11 @@ console.ignoredYellowBox = ['Remote debugger', 'Debugger and device'];
 
 class MainScreen extends React.Component {
   constructor(props) {
-      super(props);
-      
-      this.state = {
-        data: [{ 
+    super(props);
+    
+    this.state = {
+      data: [
+        { 
           link: "https://iso.500px.com/wp-content/uploads/2016/11/stock-photo-159533631-1500x1000.jpg",
           id: "0",
         },
@@ -23,17 +35,45 @@ class MainScreen extends React.Component {
         {
           link: "https://icdn3.digitaltrends.com/image/photographer-ted-hesser-viral-eclipse-photo-of-the-century.jpg",
           id: "2",
-        }],
-        refreshing: false
-        }       
+        }
+      ],
+      refreshing: false
+    }
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ isBack: this.onBackBtnClick });
-    this.getPhotos();
+    this._fetchPhotos();
   }
 
-  getPhotos = () => {
+  static navigationOptions = ({navigation}) => ({
+    headerStyle: {
+      backgroundColor: "#F79D33",
+      borderBottomWidth: 0,
+      elevation: null,
+    },
+    headerTintColor: '#fff',
+
+    headerTitle: 'Лента',
+    headerTitleStyle: { 
+      color: 'white', 
+      alignSelf: 'center',
+      textAlign: 'center',
+      fontSize: 28
+    },
+    headerLeft: (
+      <TouchableOpacity onPress={ ()=>{
+        Auth.logout();
+        const { navigate } = navigation;
+        navigate('LoginScreen', {});
+      } }>
+        <Image source={iconLogOut} style={{width: 18, height: 20, marginLeft:22}}/>
+      </TouchableOpacity>
+    )
+  })
+
+  _fetchPhotos = () => {
+
+
     const { dispatch } = this.props;
 
     AsyncStorage.getItem('token').then((response) => {
@@ -48,29 +88,18 @@ class MainScreen extends React.Component {
     })
   }
 
-  static navigationOptions = ({navigation}) => ({
-    headerTitle: 'Лента',
-    headerStyle: {
-      backgroundColor: "#FC4A1A"
-    },
-    headerTitleStyle: { 
-      color: 'white', 
-      alignSelf: 'center',
-      textAlign: 'center',
-      marginLeft: 85,
-      fontSize: 28
-    },
-    headerLeft: (<Image source={iconLogOut} style={{width: 18, height: 20, marginLeft:22}}/>),
-    
-  })
+  _handleTakePhotoAction(){
+    const { navigate } = this.props.navigation
+    navigate('TakePhotoScreen');
+  }
 
-showImage = (link, id) => {
-  const { dispatch } = this.props;
-  let {navigate} = this.props.navigation
-  
-  dispatch(Actions.showSelectImage(link, id))
-  return navigate('ShowPhotoScreen',)
-}
+  showImage = (link, id) => {
+    const { dispatch } = this.props;
+    let {navigate} = this.props.navigation
+    
+    dispatch(Actions.showSelectImage(link, id))
+    return navigate('ShowPhotoScreen',)
+  }
 
 // _onRefresh() {
 //   this.setState({refreshing: true});
@@ -104,7 +133,10 @@ showImage = (link, id) => {
         }
         keyExtractor = {(item, index) => index.toString()}
         />
-        <TouchableOpacity style={styles.opaciti} onPress={() => { navigate('TakePhotoScreen',)}}>
+        <TouchableOpacity 
+          onPress={ this._handleTakePhotoAction.bind(this) }
+          style={styles.opacity}
+        >
           <Image 
             style={styles.btn}
             source={addImg}
@@ -126,7 +158,7 @@ const styles = StyleSheet.create({
     height:80,
     borderRadius:30
   },
-  opaciti:{
+  opacity:{
     position: "absolute",
     bottom: 0
   }
@@ -140,7 +172,6 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedMainScreen = connect(mapStateToProps)(MainScreen);
-export default connectedMainScreen;
+export default connect(mapStateToProps)(MainScreen);
 
 
