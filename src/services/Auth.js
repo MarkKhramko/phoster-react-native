@@ -11,9 +11,17 @@ function getToken(){
     return token;
 }
 
-function logout(){
-    AsyncStorage.removeItem('token');
+async function logout(){
+    try {
+      await AsyncStorage.removeItem('token');
+      return true;
+    }
+    catch(exception) {
+        console.log(exception.message);
+      return false;
+    }
 }
+
 
 function login(nickname, password) {
     const url = APIConst.LOGIN;
@@ -61,10 +69,3 @@ export const Auth = {
     getToken,
     logout
 };
-
-// function logout() {
-//     return dispatch => {
-//         AsyncStorage.removeItem('token');
-//         dispatch(success())
-//         return true
-// }

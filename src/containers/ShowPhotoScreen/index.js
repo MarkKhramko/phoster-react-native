@@ -1,11 +1,16 @@
 import React from 'react';
-import { connect } from 'react-redux'
-import { StyleSheet, View, TouchableOpacity, Image} from 'react-native';
+import { connect } from 'react-redux';
+import { 
+  Image,
+  StyleSheet,
+  View,
+  TouchableOpacity
+} from 'react-native';
 import { MapView } from 'expo';
-import like_disable from '../assets/like_disable.png'
-import like_enable from '../assets/like_enable.png'
+import like_disable from './like_disable.png';
+import like_enable from './like_enable.png';
 
-class ShowPhoto extends React.Component {
+class ShowPhotoScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -120,5 +125,4 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedShowPhoto = connect(mapStateToProps)(ShowPhoto);
-export default connectedShowPhoto;
+export default connect(mapStateToProps)(ShowPhotoScreen);

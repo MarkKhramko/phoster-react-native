@@ -9,12 +9,11 @@ import {
   View,
   AsyncStorage
 } from 'react-native'
-import { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo';
 
-import { Auth } from '../services/Auth'
-
-import GradientBackground from '../components/GradientBackground'
-import RoundedButton from '../components/RoundedButton'
+import { Auth } from '../../services/Auth';
+import GradientBackground from '../../components/GradientBackground';
+import RoundedButton from '../../components/RoundedButton';
 
 
 class LoginScreen extends React.Component {
@@ -22,8 +21,8 @@ class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nickname: '',
-      password: ''
+      nickname: 'test',
+      password: 'simplepass'
     };
   }
 
@@ -70,6 +69,11 @@ class LoginScreen extends React.Component {
   
   render() {
     const {navigate} = this.props.navigation;
+    const{
+      nickname,
+      password
+    }=this.state;
+
 
     return (
       <GradientBackground style={styles.container}>
@@ -80,11 +84,13 @@ class LoginScreen extends React.Component {
           style={styles.inputField}
           underlineColorAndroid='transparent'
           placeholder="+7-999-999-99-99"
+          value={nickname}
           onChangeText={(nickname) => this.setState({nickname})}
         />
         <TextInput
           style={styles.inputField}
           placeholder="Пароль"
+          value={password}
           secureTextEntry
           onChangeText={(password) => this.setState({password})}
         />
@@ -93,7 +99,6 @@ class LoginScreen extends React.Component {
           onPress={this._handleLoginAction.bind(this)}
           title="Войти"
         />
-
         <RoundedButton
           width="74%"
           onPress={() => navigate('RegisterScreen', {})}

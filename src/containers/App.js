@@ -1,23 +1,25 @@
 import React from 'react';
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator} from 'react-navigation';
 
-// Photos
-import TakePhoto from './TakePhoto'
-import MainScreen from './MainScreen'
-import ShowPhoto from './ShowPhoto'
-
+import WelcomeScreen from './WelcomeScreen';
 // Auth
-import StarterScreen from './StarterScreen'
-import LoginScreen from './LoginScreen'
-import RegisterScreen from './RegisterScreen'
+import LoginScreen from './LoginScreen';
+import RegisterScreen from './RegisterScreen';
+// Photo take
+import TakePhotoScreen from './TakePhotoScreen';
+import PreviewPhotoScreen from './PreviewPhotoScreen';
+// Feed
+import MainScreen from './MainScreen';
+import ShowPhotoScreen from './ShowPhotoScreen';
 
 const App = createStackNavigator({
-  StarterScreen: { screen: StarterScreen},
+  WelcomeScreen: { screen: WelcomeScreen},
   LoginScreen: { screen: LoginScreen },
   RegisterScreen: { screen: RegisterScreen },
   MainScreen: { screen: MainScreen },
-  TakePhotoScreen: { screen: TakePhoto },
-  ShowPhotoScreen: { screen: ShowPhoto },
+  ShowPhotoScreen: { screen: ShowPhotoScreen },
+  TakePhotoScreen: { screen: TakePhotoScreen },
+  PreviewPhotoScreen:{ screen:PreviewPhotoScreen }
 });
 
 export default App;
