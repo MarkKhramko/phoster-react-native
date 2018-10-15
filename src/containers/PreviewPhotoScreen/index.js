@@ -1,18 +1,21 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import * as PhotosActions from '../../actions/photos';
 import {
   Image,
   StyleSheet,
   View
 } from 'react-native';
-import RoundedButton from '../../components/RoundedButton';
+import BrightButton from '../../components/BrightButton';
+import PhotosService from '../../services/Photos';
 
 class PreviewPhotoScreen extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: false
     };
   }
 
@@ -34,7 +37,23 @@ class PreviewPhotoScreen extends React.Component {
   })
 
   _handleSendAction(){
-    console.log('Save');
+    const{ photoToSend }=this.props;
+
+    PhotosService.sendPhoto(photoToSend)
+    .then((res)=>{
+      console.log({
+        res, 
+        data:res.data,
+        body:res.body
+      });
+
+      const isLoading = false;
+      this.setState({ isLoading });
+    })
+    .catch((err)=> console.log(err));
+
+    const isLoading = true;
+    this.setState({isLoading});
   }
 
   render() {
@@ -53,7 +72,7 @@ class PreviewPhotoScreen extends React.Component {
           source={ source }
           style={ styles.preview }
         />
-        <RoundedButton
+        <BrightButton
           width="74%"
           onPress={this._handleSendAction.bind(this)}
           title="Отправить"
@@ -82,7 +101,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    photosActions: bindActionCreators(PhotosActions, dispatch)
+  };
 }
 
 export default connect(

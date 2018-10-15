@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 import Auth from '../../services/Auth';
-import Photos from '../../services/Photos';
+import PhotosService from '../../services/Photos';
 
 import addPhotoImg from './add_photo.png';
 import iconLogOut from './icon_logout.png';
@@ -75,16 +75,18 @@ class MainScreen extends React.Component {
   /* Network */
   _fetchPhotos(){
     const{
-      lastPhotoDate
+      lastPhotoDate,
     }=this.state;
 
-    Photos.getPhotos(lastPhotoDate)
+    PhotosService.getPhotos(lastPhotoDate)
     .then((res)=>{
+      let photos = [...this.state.photos];
       if(res.data.photos){
-        const isRefreshing = false;
-        const photos = res.data.photos;
-        this.setState({ isRefreshing, photos });
+        photos = res.data.photos;
       }
+
+      const isRefreshing = false;
+      this.setState({ isRefreshing, photos });
     })
     .catch((err)=> console.log(err));
 
@@ -122,8 +124,13 @@ class MainScreen extends React.Component {
     const uri = photoData.url;
 
     return(
-      <View style={ styles.imageContainer }>
-        <TouchableOpacity onPress={ () => { this._handlePhotoTap(photoData) } }>
+      <View
+        key={ photoId }
+        style={ styles.imageContainer }
+      >
+        <TouchableOpacity 
+          onPress={ () => { this._handlePhotoTap(photoData) } }
+        >
           <Image
             source={ { uri } }
             style={ styles.image }
@@ -153,6 +160,8 @@ class MainScreen extends React.Component {
       isRefreshing,
       photos
     }=this.state;
+
+    console.log(photos);
 
     return (
       <View style={ styles.container }>
