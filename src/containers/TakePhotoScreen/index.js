@@ -1,4 +1,5 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   Image,
@@ -50,19 +51,19 @@ class TakePhotoScreen extends React.Component {
   })
 
   _takePicture(){
-    const{ navigation }=this.props;
     const cam = this.camera;
     console.log('Check');
 
     if(!!cam) {
       cam.takePictureAsync()
-      .then((data) => _processPhoto(data))
+      .then((data) => this._processPhoto(data))
       .catch((err)=> console.error(err));
     }
   }
 
   _processPhoto(photoData){
-    console.log({data});
+    const{ navigation }=this.props;
+    console.log({photoData});
     navigation.navigate('PreviewPhotoScreen', {});
   }
 
@@ -183,15 +184,14 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  const{
-    addRequest,
-    addSuccess
-  }=state.photos;
-
-  return {
-    addRequest,
-    addSuccess
-  };
+  return {};
 }
 
-export default connect(mapStateToProps)(TakePhotoScreen);
+function mapDispatchToProps(dispatch) {
+  return {};
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TakePhotoScreen);

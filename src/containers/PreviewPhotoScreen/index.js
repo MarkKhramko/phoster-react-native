@@ -1,10 +1,12 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   Image,
   StyleSheet,
   View
 } from 'react-native';
+import RoundedButton from '../../components/RoundedButton';
 
 class PreviewPhotoScreen extends React.Component {
 
@@ -31,23 +33,30 @@ class PreviewPhotoScreen extends React.Component {
     }
   })
 
-  handleSave(){
+  _handleSendAction(){
     console.log('Save');
   }
 
   render() {
-    <View style={ styles.container }>
-      <Image
-        style={ styles.preview }
-      />
-
-    </View>
+    return(
+      <View style={ styles.container }>
+        <Image
+          style={ styles.preview }
+        />
+        <RoundedButton
+          width="74%"
+          onPress={this._handleSendAction.bind(this)}
+          title="Отправить"
+        />
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    alignItems: 'center'
   },
 
   preview: { 
@@ -56,15 +65,14 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  const{
-    addRequest,
-    addSuccess
-  }=state.photos;
-
-  return {
-    addRequest,
-    addSuccess
-  };
+  return {};
 }
 
-export default connect(mapStateToProps)(PreviewPhotoScreen);
+function mapDispatchToProps(dispatch) {
+  return {};
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreviewPhotoScreen);

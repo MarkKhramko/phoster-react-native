@@ -118,11 +118,12 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  const { link, id } = state.photos;
   return {
-    link,
-    id,
+    link: state.photos.link,
+    id: state.photos.id
   };
 }
 
-export default connect(mapStateToProps)(ShowPhotoScreen);
+export default connect(
+  mapStateToProps
+)(ShowPhotoScreen);

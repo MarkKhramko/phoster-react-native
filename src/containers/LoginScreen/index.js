@@ -26,9 +26,9 @@ class LoginScreen extends React.Component {
     };
   }
 
-  componentWillMount(){
-    const token = Auth.getToken();
-    if(!!token){
+  async componentWillMount(){
+    const token = await Auth.getToken();
+    if(token !== null){
       const { navigate } = this.props.navigation;
       navigate('MainScreen', {});
     }
@@ -142,13 +142,10 @@ const styles = StyleSheet.create({
   }
 });
 
- 
 function mapStateToProps(state) {
- const { loggedIn, logout } = state.auth;
-  return {
-   loggedIn,
-   logout
-  };
+  return {};
 }
 
-export default connect(mapStateToProps)(LoginScreen);
+export default connect(
+  mapStateToProps
+)(LoginScreen);

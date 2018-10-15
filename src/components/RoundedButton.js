@@ -19,23 +19,10 @@ export default class RoundedButton extends React.Component {
 		}=this.props;
 
 		const buttonWidth = !!width ? width : '40%';
-		const buttonStyle = {
-			width: buttonWidth,
-			height: 42,
-		    marginTop: 30,
-		    borderRadius: 21,
-		    paddingLeft: 20,
-		    paddingRight: 20,
-		    backgroundColor: '#fff',
-
-		    elevation: 5,
-		    shadowColor: '#aa0000',
-		    shadowRadius: 8
-		};
 
 		return(
 			<TouchableOpacity
-				style={ buttonStyle }
+				style={ [{width:buttonWidth}, styles.button] }
 				onPress={onPress ? onPress.bind(this) : ()=>{}}
 			>
 				<Text style={ styles.title }>
@@ -47,11 +34,24 @@ export default class RoundedButton extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  title:{
-  	width: '100%',
-  	textAlign: 'center',
-  	color: '#333',
-  	fontSize: 20,
-    lineHeight: 42
-  }
+	button:{
+		height: 42,
+	    marginTop: 30,
+	    borderRadius: 21,
+	    paddingLeft: 20,
+	    paddingRight: 20,
+	    backgroundColor: '#fff',
+
+	    shadowColor: '#fff',
+	    shadowOpacity: 0.5,
+		shadowRadius: 12
+	},
+
+	title:{
+		width: '100%',
+		textAlign: 'center',
+		color: '#333',
+		fontSize: 20,
+		lineHeight: 42
+	}
 });

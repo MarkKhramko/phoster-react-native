@@ -20,8 +20,12 @@ class WelcomeScreen extends React.Component {
   }
 
   static navigationOptions = {
-    header: null,
-    elevation: null
+    headerStyle: {
+      backgroundColor: "#F79D33",
+      borderBottomWidth: 0,
+      elevation: null,
+    },
+    headerTintColor: '#fff'
   };
 
 

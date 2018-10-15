@@ -2,23 +2,36 @@ import Axios from 'axios';
 import { AsyncStorage , Alert } from 'react-native';
 import * as APIConst from '../constants/API'
 
-function saveToken(token){
-    AsyncStorage.setItem('token', token);
+async function saveToken(token){
+    try{
+        const result = await AsyncStorage.setItem('token', token);
+        return result;
+    }
+    catch(exception) {
+        console.log(exception.message);
+        return null;
+    }
 }
 
-function getToken(){
-    const token = AsyncStorage.getItem('token');
-    return token;
+async function getToken(){
+    try{
+        const token = await AsyncStorage.getItem('token');
+        return token;
+    }
+    catch(exception) {
+        console.log(exception.message);
+        return null;
+    }
 }
 
 async function logout(){
     try {
-      await AsyncStorage.removeItem('token');
-      return true;
+        await AsyncStorage.removeItem('token');
+        return true;
     }
     catch(exception) {
         console.log(exception.message);
-      return false;
+        return false;
     }
 }
 

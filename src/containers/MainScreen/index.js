@@ -1,4 +1,5 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { 
   FlatList,
@@ -12,7 +13,7 @@ import {
 } from 'react-native';
 import { Auth } from '../../services/Auth';
 
-import addImg from './add_photo.png';
+import addPhotoImg from './add_photo.png';
 import iconLogOut from './icon_logout.png';
 
 console.ignoredYellowBox = ['Remote debugger', 'Debugger and device', "Possible", "Unhandled"];
@@ -22,7 +23,7 @@ class MainScreen extends React.Component {
     super(props);
     
     this.state = {
-      isRefreshing: false,
+      isRefreshing: true,
 
       data: [
         { 
@@ -56,11 +57,9 @@ class MainScreen extends React.Component {
   static navigationOptions = ({navigation}) => ({
     headerStyle: {
       backgroundColor: "#FF4335",
-      borderBottomWidth: 0,
-      elevation: null,
+      borderBottomWidth: 0
     },
     headerTintColor: '#fff',
-
     headerTitle: 'Phoster',
     headerTitleStyle: { 
       color: 'white', 
@@ -69,18 +68,20 @@ class MainScreen extends React.Component {
       fontSize: 28
     },
     headerLeft: (
-      <TouchableOpacity onPress={ ()=>{
-        if(Auth.logout()){
-          const { navigate } = navigation;
-          navigate('LoginScreen', {});
-        }
-      } }>
+      <TouchableOpacity 
+        onPress={ async ()=>{
+          const didLogout = await Auth.logout();
+          if(didLogout){
+            const { navigate } = navigation;
+            navigate('LoginScreen', {});
+          }
+        }}>
         <Image source={iconLogOut} style={{width: 18, height: 20, marginLeft:22}}/>
       </TouchableOpacity>
     )
   })
 
-  _fetchPhotos = () => {
+  _fetchPhotos(){
 
   }
 
@@ -101,6 +102,43 @@ class MainScreen extends React.Component {
     const isRefreshing = true;
     this.setState({ isRefreshing });
   }
+
+  _handleFetchMore(){
+    const isFetching = true;
+    this.setState({ isFetching });
+  }
+
+  /* Render */
+  _renderFeedPhoto(photoData){
+
+    const photoId = photoData.id;
+    const uri = photoData.link;
+
+    return(
+      <View style={ styles.imageContainer }>
+        <TouchableOpacity onPress={ () => { this.showImage(uri, photoId) } }>
+          <Image
+            style={ styles.image } 
+            source={ { uri } }
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  _renderPhotoButton(){
+    return(
+      <TouchableOpacity 
+        onPress={ this._handleTakePhotoAction.bind(this) }
+        style={ styles.addPhotoBtn }
+      >
+        <Image 
+          style={ styles.addPhotoIcon }
+          source={ addPhotoImg }
+        />
+      </TouchableOpacity>
+    );
+  }
  
   render() {
     const { navigate } = this.props.navigation
@@ -110,7 +148,7 @@ class MainScreen extends React.Component {
     }=this.state;
 
     return (
-      <View style={styles.container}>
+      <View style={ styles.container }>
         <StatusBar
           barStyle="light-content"
         />
@@ -122,27 +160,11 @@ class MainScreen extends React.Component {
             />
           }
           data={data}
-          renderItem={({item}) =>
-            <View style={{ marginTop: 20}}>
-              <TouchableOpacity onPress={() => { this.showImage(item.link, item.id) }}>
-                <Image
-                  style={{width: 280, height: 280, borderRadius: 4}}
-                  source={{uri: item.link}}
-                />
-              </TouchableOpacity>
-            </View> 
-        }
-        keyExtractor = {(item, index) => index.toString()}
+          renderItem={ ({item}) => this._renderFeedPhoto(item) }
+          keyExtractor = { (item, index) => index.toString() }
+          style={ styles.flatList }
         />
-        <TouchableOpacity 
-          onPress={ this._handleTakePhotoAction.bind(this) }
-          style={styles.opacity}
-        >
-          <Image 
-            style={styles.btn}
-            source={addImg}
-          />
-        </TouchableOpacity>
+        { this._renderPhotoButton() }
       </View>
     );
   }
@@ -154,25 +176,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
-  btn:{
+  flatList:{
+    width: '100%',
+  },
+  imageContainer:{
+    flex: 1,
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 20,
+    shadowOpacity: 0.35,
+    shadowRadius: 12
+  },
+  image:{
+    width: 280,
+    height: 280,
+    borderRadius: 4
+  },
+
+  addPhotoBtn:{
+    position: "absolute",
+    bottom: 0
+  },
+  addPhotoIcon:{
     width:80,
     height:80,
     borderRadius:30
-  },
-  opacity:{
-    position: "absolute",
-    bottom: 0
   }
 });
 
 function mapStateToProps(state) {
-  const { photos } = state.photos;
-
-  return {
-    photos
-  };
+  return {};
 }
 
-export default connect(mapStateToProps)(MainScreen);
+function mapDispatchToProps(dispatch) {
+  return {};
+}
 
-
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MainScreen);

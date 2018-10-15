@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { 
   Alert,
   StyleSheet,
@@ -116,11 +116,9 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  const { registeredSuccess} = state.register;
-
-  return {
-      registeredSuccess,
-  };
+  return {};
 }
 
-export default connect(mapStateToProps)(RegisterScreen);
+export default connect(
+  mapStateToProps
+)(RegisterScreen);
