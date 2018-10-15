@@ -75,10 +75,12 @@ function register(nickname, password) {
     });
 }
 
-export const Auth = {
+const AuthService = {
     login,
     register,
 
     getToken,
     logout
 };
+
+export default AuthService;

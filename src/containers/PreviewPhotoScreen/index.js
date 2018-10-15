@@ -18,7 +18,7 @@ class PreviewPhotoScreen extends React.Component {
 
   static navigationOptions = ({navigation}) => ({
     headerStyle: {
-      backgroundColor: "#FF4335",
+      backgroundColor: "#FC4A1A",
       borderBottomWidth: 0,
       elevation: null,
     },
@@ -38,9 +38,19 @@ class PreviewPhotoScreen extends React.Component {
   }
 
   render() {
+    const{
+      photoToSend
+    }=this.props;
+
+    const source = {
+      isStatic:true,
+      uri:photoToSend.uri
+    };
+
     return(
       <View style={ styles.container }>
         <Image
+          source={ source }
           style={ styles.preview }
         />
         <RoundedButton
@@ -60,12 +70,15 @@ const styles = StyleSheet.create({
   },
 
   preview: { 
-    height: 360 
+    width: '100%',
+    height: 360
   },
 });
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    photoToSend: state.photos.photoToSend
+  };
 }
 
 function mapDispatchToProps(dispatch) {

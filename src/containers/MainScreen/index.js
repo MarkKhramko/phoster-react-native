@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { Auth } from '../../services/Auth';
+import Auth from '../../services/Auth';
+import Photos from '../../services/Photos';
 
 import addPhotoImg from './add_photo.png';
 import iconLogOut from './icon_logout.png';
@@ -23,22 +24,9 @@ class MainScreen extends React.Component {
     super(props);
     
     this.state = {
-      isRefreshing: true,
-
-      data: [
-        { 
-          link: "https://iso.500px.com/wp-content/uploads/2016/11/stock-photo-159533631-1500x1000.jpg",
-          id: "0",
-        },
-        {
-          link: "https://wpp.azureedge.net/sites/default/files/styles/gallery_main_image/public/hviofv7y64ywr2sk1ju5.jpg?itok=915b_CWI",
-          id: "1",
-        },
-        {
-          link: "https://icdn3.digitaltrends.com/image/photographer-ted-hesser-viral-eclipse-photo-of-the-century.jpg",
-          id: "2",
-        }
-      ]
+      isRefreshing: false,
+      lastPhotoDate: new Date(),
+      photos:[]
     }
   }
 
@@ -51,12 +39,15 @@ class MainScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._fetchPhotos();
+    const{ photos }=this.state;
+    if(photos.length === 0){
+      this._fetchPhotos();
+    }
   }
 
   static navigationOptions = ({navigation}) => ({
     headerStyle: {
-      backgroundColor: "#FF4335",
+      backgroundColor: "#FC4A1A",
       borderBottomWidth: 0
     },
     headerTintColor: '#fff',
@@ -81,26 +72,42 @@ class MainScreen extends React.Component {
     )
   })
 
+  /* Network */
   _fetchPhotos(){
+    const{
+      lastPhotoDate
+    }=this.state;
 
+    Photos.getPhotos(lastPhotoDate)
+    .then((res)=>{
+      if(res.data.photos){
+        const isRefreshing = false;
+        const photos = res.data.photos;
+        this.setState({ isRefreshing, photos });
+      }
+    })
+    .catch((err)=> console.log(err));
+
+    const isRefreshing = true;
+    this.setState({isRefreshing});
   }
 
+  /* Interactions */
   _handleTakePhotoAction(){
     const { navigate } = this.props.navigation
     navigate('TakePhotoScreen');
   }
 
-  showImage = (link, id) => {
-    const { dispatch } = this.props;
-    let {navigate} = this.props.navigation
+  _handlePhotoTap = (photoData) => {
+    const { navigate } = this.props.navigation
     
-    dispatch(Actions.showSelectImage(link, id))
-    return navigate('ShowPhotoScreen',)
+    // pass photoData
+
+    return navigate('ShowPhotoScreen');
   }
 
   _handleRefresh() {
-    const isRefreshing = true;
-    this.setState({ isRefreshing });
+    this._fetchPhotos();
   }
 
   _handleFetchMore(){
@@ -112,14 +119,14 @@ class MainScreen extends React.Component {
   _renderFeedPhoto(photoData){
 
     const photoId = photoData.id;
-    const uri = photoData.link;
+    const uri = photoData.url;
 
     return(
       <View style={ styles.imageContainer }>
-        <TouchableOpacity onPress={ () => { this.showImage(uri, photoId) } }>
+        <TouchableOpacity onPress={ () => { this._handlePhotoTap(photoData) } }>
           <Image
-            style={ styles.image } 
             source={ { uri } }
+            style={ styles.image }
           />
         </TouchableOpacity>
       </View>
@@ -144,7 +151,7 @@ class MainScreen extends React.Component {
     const { navigate } = this.props.navigation
     const{
       isRefreshing,
-      data
+      photos
     }=this.state;
 
     return (
@@ -159,7 +166,7 @@ class MainScreen extends React.Component {
               onRefresh={ this._handleRefresh.bind(this) }
             />
           }
-          data={data}
+          data={ photos }
           renderItem={ ({item}) => this._renderFeedPhoto(item) }
           keyExtractor = { (item, index) => index.toString() }
           style={ styles.flatList }

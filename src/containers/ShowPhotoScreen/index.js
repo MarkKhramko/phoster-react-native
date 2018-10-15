@@ -6,7 +6,9 @@ import {
   View,
   TouchableOpacity
 } from 'react-native';
-import { MapView } from 'expo';
+import { 
+  MapView 
+} from 'expo';
 import like_disable from './like_disable.png';
 import like_enable from './like_enable.png';
 

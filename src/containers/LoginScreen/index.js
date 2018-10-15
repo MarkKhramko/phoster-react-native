@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { LinearGradient } from 'expo';
 
-import { Auth } from '../../services/Auth';
+import Auth from '../../services/Auth';
 import GradientBackground from '../../components/GradientBackground';
 import RoundedButton from '../../components/RoundedButton';
 

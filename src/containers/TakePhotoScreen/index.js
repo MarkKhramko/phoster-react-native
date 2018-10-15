@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import * as PhotosActions from '../../actions/photos';
 import {
   Image,
   StatusBar,
@@ -23,7 +24,7 @@ class TakePhotoScreen extends React.Component {
     super(props);
     this.state = {
       hasCameraPermission: false,
-      type: Camera.Constants.Type.back,
+      cameraType: Camera.Constants.Type.back,
       flashMode: Camera.Constants.FlashMode.off
     };
   }
@@ -35,7 +36,7 @@ class TakePhotoScreen extends React.Component {
 
   static navigationOptions = ({navigation}) => ({
     headerStyle: {
-      backgroundColor: "#FF4335",
+      backgroundColor: "#FC4A1A",
       borderBottomWidth: 0,
       elevation: null,
     },
@@ -62,9 +63,14 @@ class TakePhotoScreen extends React.Component {
   }
 
   _processPhoto(photoData){
-    const{ navigation }=this.props;
-    console.log({photoData});
-    navigation.navigate('PreviewPhotoScreen', {});
+    const{
+      photosActions,
+      navigation
+    }=this.props;
+
+    photosActions.setPhotoToSend(photoData);
+
+    navigation.navigate('PreviewPhotoScreen');
   }
 
   _handleFlashAction(){
@@ -75,16 +81,16 @@ class TakePhotoScreen extends React.Component {
   }
 
   _handleFlipAction(){
-    const type = this.state.type === Camera.Constants.Type.back
+    const cameraType = this.state.cameraType === Camera.Constants.Type.back
                   ? Camera.Constants.Type.front
                   : Camera.Constants.Type.back;
-    this.setState({ type });
+    this.setState({ cameraType });
   }
 
   render() {
     const { 
       hasCameraPermission,
-      type,
+      cameraType,
       flashMode
     } = this.state;
 
@@ -99,7 +105,7 @@ class TakePhotoScreen extends React.Component {
         <View style={ styles.container }>
           <Camera 
             ref={(cam)=>{ this.camera = cam; }}
-            type={ type }
+            cameraType={ cameraType }
             flashMode={ flashMode }
             style={ styles.camera }
           />
@@ -188,7 +194,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    photosActions: bindActionCreators(PhotosActions, dispatch)
+  };
 }
 
 export default connect(

@@ -1,48 +1,20 @@
-import { userConst } from '../constants/userConst';
+import photosActions from '../constants/photosActions';
 
 const initialState = {
-    addRequest: false,
-    addSuccess: false,
-    photosGet: false,
-    photosRequest: false,
-    photos: [],
-    id: '',
-    link: ''
+    chosenPhoto: null,
+    photoToSend: null
 };
 
 export function photos (state = initialState, action) {
+
+    let newState = {...state};
     switch (action.type) {
-        case userConst.GET_REQUEST:
-            return {
-                ...state,
-                photosRequest: true
-            };
-        case userConst.GET_SUCCESS:
-            return {
-                ...state,
-                photosGet: true,
-                photos: action.tasks
-            };
-        case userConst.GET_FAILURE:
-            return {};
-        case userConst.ADD_REQUEST:
-            return {
-                ...state,
-                addRequest: true
-            };
-        case userConst.ADD_SUCCESS:
-            return {
-                ...state,
-                addSuccess: true 
-            };
-        case userConst.ADD_FAILURE:
-            return {};       
-        case userConst.SELECT_TASK:
-            return {
-                ...state,
-                link: action.link,
-                id: action.id
-            }      
+        case photosActions.SET_CHOSEN_PHOTO:
+            newState.chosenPhoto = action.chosenPhoto;
+            return newState;
+        case photosActions.SET_PHOTO_TO_SEND:
+            newState.photoToSend = action.photoToSend;
+            return newState;
         default:
             return state
     }

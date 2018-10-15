@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux';
 import { auth } from '../reducers/auth';
+import { photos } from '../reducers/photos';
 // import { register } from '../reducers/register';
-// import { photos } from '../reducers/photos';
 
 const rootReducer = combineReducers({ 
-    auth
+    auth,
+    photos
 });
 
 export default rootReducer;
