@@ -1,28 +1,29 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { 
-  StyleSheet, 
-  View, 
-  AsyncStorage,
   FlatList,
-  TouchableOpacity,
   Image,
-  Text
+  RefreshControl,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
-import { Actions } from '../actions/Actions'
-import { connect } from 'react-redux'
+import { Auth } from '../../services/Auth';
 
-import { Auth } from '../services/Auth'
+import addImg from './add_photo.png';
+import iconLogOut from './icon_logout.png';
 
-import addImg from '../assets/add_photo.png'
-import iconLogOut from '../assets/icon_logout.png'
-
-console.ignoredYellowBox = ['Remote debugger', 'Debugger and device'];
+console.ignoredYellowBox = ['Remote debugger', 'Debugger and device', "Possible", "Unhandled"];
 
 class MainScreen extends React.Component {
   constructor(props) {
     super(props);
     
     this.state = {
+      isRefreshing: false,
+
       data: [
         { 
           link: "https://iso.500px.com/wp-content/uploads/2016/11/stock-photo-159533631-1500x1000.jpg",
@@ -36,8 +37,15 @@ class MainScreen extends React.Component {
           link: "https://icdn3.digitaltrends.com/image/photographer-ted-hesser-viral-eclipse-photo-of-the-century.jpg",
           id: "2",
         }
-      ],
-      refreshing: false
+      ]
+    }
+  }
+
+  componentWillMount(){
+    const token = Auth.getToken();
+    if(!token){
+      const { navigate } = this.props.navigation;
+      navigate('LoginScreen', {});
     }
   }
 
@@ -47,13 +55,13 @@ class MainScreen extends React.Component {
 
   static navigationOptions = ({navigation}) => ({
     headerStyle: {
-      backgroundColor: "#F79D33",
+      backgroundColor: "#FF4335",
       borderBottomWidth: 0,
       elevation: null,
     },
     headerTintColor: '#fff',
 
-    headerTitle: 'Лента',
+    headerTitle: 'Phoster',
     headerTitleStyle: { 
       color: 'white', 
       alignSelf: 'center',
@@ -62,9 +70,10 @@ class MainScreen extends React.Component {
     },
     headerLeft: (
       <TouchableOpacity onPress={ ()=>{
-        Auth.logout();
-        const { navigate } = navigation;
-        navigate('LoginScreen', {});
+        if(Auth.logout()){
+          const { navigate } = navigation;
+          navigate('LoginScreen', {});
+        }
       } }>
         <Image source={iconLogOut} style={{width: 18, height: 20, marginLeft:22}}/>
       </TouchableOpacity>
@@ -73,19 +82,6 @@ class MainScreen extends React.Component {
 
   _fetchPhotos = () => {
 
-
-    const { dispatch } = this.props;
-
-    AsyncStorage.getItem('token').then((response) => {
-      dispatch(Actions.getTasks(response))
-      .then(
-        tasks => {
-          console.log(tasks, 'maybe tasks')
-      this.state.data = this.props.tasks
-      this.setState({refreshing: false})
-      this.forceUpdate()
-      })
-    })
   }
 
   _handleTakePhotoAction(){
@@ -101,31 +97,36 @@ class MainScreen extends React.Component {
     return navigate('ShowPhotoScreen',)
   }
 
-// _onRefresh() {
-//   this.setState({refreshing: true});
-//   this.componentDidMount()
-// }
+  _handleRefresh() {
+    const isRefreshing = true;
+    this.setState({ isRefreshing });
+  }
  
   render() {
     const { navigate } = this.props.navigation
-    let data = this.state.data
-    console.log('thisISData', data)
+    const{
+      isRefreshing,
+      data
+    }=this.state;
 
     return (
       <View style={styles.container}>
+        <StatusBar
+          barStyle="light-content"
+        />
         <FlatList
-          // refreshControl={
-          //   <RefreshControl
-          //     refreshing={this.state.refreshing}
-          //     onRefresh={this._onRefresh.bind(this)}
-          //   />
-          // }
+          refreshControl={
+            <RefreshControl
+              refreshing={ isRefreshing }
+              onRefresh={ this._handleRefresh.bind(this) }
+            />
+          }
           data={data}
           renderItem={({item}) =>
             <View style={{ marginTop: 20}}>
               <TouchableOpacity onPress={() => { this.showImage(item.link, item.id) }}>
                 <Image
-                  style={{width: 320, height: 320, borderRadius: 10}}
+                  style={{width: 280, height: 280, borderRadius: 4}}
                   source={{uri: item.link}}
                 />
               </TouchableOpacity>
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#E5E5E5',
+    backgroundColor: '#fff',
   },
   btn:{
     width:80,

@@ -7,13 +7,12 @@ import {
   TextInput,
   View
 } from 'react-native';
-import { HeaderBackButton } from "react-navigation"
-import { Actions } from '../actions/Actions'
+import { HeaderBackButton } from "react-navigation";
 
-import GradientBackground from '../components/GradientBackground'
-import RoundedButton from '../components/RoundedButton'
+import GradientBackground from '../../components/GradientBackground';
+import RoundedButton from '../../components/RoundedButton';
 
-import { Auth } from '../services/Auth'
+import { Auth } from '../../services/Auth';
 
 class RegisterScreen extends React.Component {
   constructor(props) {
