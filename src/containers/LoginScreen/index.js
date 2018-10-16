@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { 
   Alert,
   Flatlist,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -18,6 +19,15 @@ import RoundedButton from '../../components/RoundedButton';
 
 class LoginScreen extends React.Component {
 
+  static navigationOptions = {
+    headerStyle: {
+      backgroundColor: "#F79D33",
+      borderBottomWidth: 0,
+      elevation: null,
+    },
+    headerTintColor: '#fff'
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -29,34 +39,29 @@ class LoginScreen extends React.Component {
   async componentWillMount(){
     const token = await Auth.getToken();
     if(token !== null){
-      const { navigate } = this.props.navigation;
-      navigate('MainScreen', {});
+      const [err, isValid] = await Auth.validateToken(token);
+      if(err){
+        return console.log("LoginScreen error:", err);
+      }
+
+      console.log({ isValid });
+
+      if(isValid)
+        this._handleSuccessfulLogin();
     }
   }
 
-  static navigationOptions = {
-    headerStyle: {
-      backgroundColor: "#F79D33",
-      borderBottomWidth: 0,
-      elevation: null,
-    },
-    headerTintColor: '#fff'
-  };
-
   _handleLoginAction() {
-    const { nickname, password } = this.state;
-    const { navigate } = this.props.navigation;
+    Keyboard.dismiss();
+
+    const { nickname, password } = this.state;    
 
     if(!!nickname && !!password) {
-      console.log("Авторизую", nickname, password);
       Auth
       .login(nickname, password)
       .then((response)=>{
-        console.log(response);
-        if(!!response.data.token){
-          
-          navigate('MainScreen', {})
-        }
+        if(!!response.data.token)
+          this._handleSuccessfulLogin();
       })
       .catch((error)=>{
         console.log(error);
@@ -65,6 +70,11 @@ class LoginScreen extends React.Component {
     } else {
       Alert.alert('Заполните телефон и пароль');
     }
+  }
+
+  _handleSuccessfulLogin(){
+    const { navigate } = this.props.navigation;
+    navigate('MainScreen');
   }
   
   render() {

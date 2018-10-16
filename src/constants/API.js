@@ -3,6 +3,7 @@ export const API_PREFIX = `${BACKEND_HOST}/api/v1`;
 
 export const REGISTER = `${API_PREFIX}/register`;
 export const LOGIN = `${API_PREFIX}/login`;
+export const VALIDATE = `${API_PREFIX}/validate`;
 
 const PRIVATE_PREFIX = `${API_PREFIX}/private`;
 

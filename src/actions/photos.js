@@ -1,7 +1,7 @@
 import photosActions from '../constants/photosActions';
 
 export function setChosenPhoto(chosenPhoto) {
-	return { type: hotosActions.SET_CHOSEN_PHOT, chosenPhoto };
+	return { type: photosActions.SET_CHOSEN_PHOTO, chosenPhoto };
 }
 
 export function setPhotoToSend(photoToSend) {

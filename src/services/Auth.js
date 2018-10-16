@@ -16,12 +16,21 @@ async function saveToken(token){
 async function getToken(){
     try{
         const token = await AsyncStorage.getItem('token');
+        console.log(token);
         return token;
     }
     catch(exception) {
         console.log(exception.message);
         return null;
     }
+}
+
+function validateToken(token){
+    const url = APIConst.VALIDATE;
+    const data = { token };
+    return Axios.post(url, data)
+    .then((res)=> Promise.resolve([null, res.data.isValid]))
+    .catch((err)=> Promise.reject([err, false]));
 }
 
 async function logout(){
@@ -80,6 +89,7 @@ const AuthService = {
     register,
 
     getToken,
+    validateToken,
     logout
 };
 

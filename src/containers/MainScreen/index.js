@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import * as PhotosActions from '../../actions/photos';
 import { 
   FlatList,
   Image,
@@ -101,11 +102,14 @@ class MainScreen extends React.Component {
   }
 
   _handlePhotoTap = (photoData) => {
-    const { navigate } = this.props.navigation
-    
-    // pass photoData
-
-    return navigate('ShowPhotoScreen');
+    const{
+      navigation,
+      photosActions
+    }=this.props;
+    // Save phot to show details
+    photosActions.setChosenPhoto(photoData);
+    // Open PhotoScreen
+    return navigation.navigate('ShowPhotoScreen');
   }
 
   _handleRefresh() {
@@ -161,8 +165,6 @@ class MainScreen extends React.Component {
       photos
     }=this.state;
 
-    console.log(photos);
-
     return (
       <View style={ styles.container }>
         <StatusBar
@@ -206,7 +208,8 @@ const styles = StyleSheet.create({
   image:{
     width: 280,
     height: 280,
-    borderRadius: 4
+    borderRadius: 4,
+    backgroundColor: '#CCCCCC'
   },
 
   addPhotoBtn:{
@@ -225,7 +228,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    photosActions: bindActionCreators(PhotosActions, dispatch)
+  };
 }
 
 export default connect(

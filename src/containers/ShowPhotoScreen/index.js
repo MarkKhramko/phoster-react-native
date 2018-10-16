@@ -13,20 +13,22 @@ import like_disable from './like_disable.png';
 import like_enable from './like_enable.png';
 
 class ShowPhotoScreen extends React.Component {
+
+  static navigationOptions = ({navigation}) => ({
+     headerTransparent: true,
+     headerBackTitle: null,
+     headerTintColor: '#fff'
+  });
+
   constructor(props) {
     super(props);
 
     this.state = {
-      like: false
+      isLiked: props.chosenPhoto.isLiked
     };
   }
 
-  static navigationOptions = ({navigation}) => ({
-    title:"showImage",
-    header: null
-  });
-
-  pushLike = () => {
+  _handleLikeAction(){
     let { like } = this.state.like
     console.log("123")
     if (this.state.like == true) {
@@ -35,55 +37,72 @@ class ShowPhotoScreen extends React.Component {
     else
       this.setState({ like, like: true })
   }
+
+  _renderMapView(){
+    const initialRegion = {
+      latitude: 37.78825,
+      longitude: -122.4324,
+      latitudeDelta: 0.1522,
+      longitudeDelta: 0.0521,
+    };
+
+    const coordinate = {
+      latitude: 38.73538,
+      longitude: -122.4324
+    };
+
+    return(
+      <MapView
+        style={ styles.mapView }
+        initialRegion={ initialRegion }
+      >
+        <MapView.Marker
+          coordinate={ coordinate }
+          title={ "Маркер" }
+          description={ "Место снимка" }
+        />
+      </MapView>
+    );
+  }
   
+  _renderLikeButton(){
+    const{
+      isLiked
+    }=this.state;
+
+    return(
+      <TouchableOpacity 
+        style={ styles.btn }
+        onPress={() => { this._handleLikeAction() }}
+      >
+        <Image 
+          style={ styles.icon }
+          source={ this.state.like === true ? like_enable : like_disable }
+        />
+      </TouchableOpacity>
+    );
+  }
 
   render() {
-    let { link, id } = this.props
-    console.log(id, link)
-    console.log(this.state.like)
+    const{ 
+      chosenPhoto
+    }=this.props
+
+    const uri = chosenPhoto.url;
 
     return (
-      <View style={styles.container}>
-        <View style={{}}>
+      <View style={ styles.container }>
+        <View style={ styles.innerContainer }>
           <TouchableOpacity onPress={() => { console.log("dasd") }}>
             <Image
-              style={{width: 360, height: 360}}
-              source={{uri: link}}
+              style={ styles.imagePreview }
+              source={ {uri} }
             />
           </TouchableOpacity>
-          <View style={styles.line}/>
-          <MapView
-            style={{ flex: 1 }}
-            initialRegion={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.1522,
-              longitudeDelta: 0.0521,
-            }}
-          >
-            <MapView.Marker
-              coordinate={{latitude: 38.73538,
-              longitude: -122.4324,}}
-              title={"Маркер"}
-              description={"Место снимка"}
-            />
-          </MapView>
-          <TouchableOpacity style={styles.opaciti} onPress={() => { this.pushLike() }}>
-            {this.state.like == true  && (
-              <Image 
-              style={styles.btn}
-              source={like_enable}
-            />
-            )}
-            {this.state.like == false && (
-              <Image 
-              style={styles.btn}
-              source={like_disable} 
-            />
-            )}
-            
-          </TouchableOpacity>  
-      </View> 
+          <View style={ styles.line }/>
+          { this._renderMapView() }
+          { this._renderLikeButton() } 
+        </View> 
       </View>
     );
   }
@@ -93,26 +112,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#E5E5E5',
+    backgroundColor: '#FC4A1A',
   },
-  header: {
-    color: '#f1841e',
-    fontWeight: 'bold',
-    fontSize: 30,
-    paddingTop: 50,
-    marginBottom: 110,
-    shadowColor: '#f8983f',
+  innerContainer:{
+    paddingTop: 20
+  },
+  imagePreview:{
+    width: 360,
+    height: 360
   },
   line: {
     borderBottomColor: '#E91926',
     borderBottomWidth: 2
   },
-  opaciti:{
+  mapView:{
+    flex: 1
+  },
+  btn:{
     position: "absolute",
     bottom: 0,
     marginLeft: 140
   },
-  btn:{
+  icon:{
     width:80,
     height:80,
     borderRadius:30
@@ -121,8 +142,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    link: state.photos.link,
-    id: state.photos.id
+    chosenPhoto: state.photos.chosenPhoto
   };
 }
 

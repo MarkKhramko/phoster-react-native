@@ -12,13 +12,6 @@ import PhotosService from '../../services/Photos';
 
 class PreviewPhotoScreen extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: false
-    };
-  }
-
   static navigationOptions = ({navigation}) => ({
     headerStyle: {
       backgroundColor: "#FC4A1A",
@@ -34,7 +27,14 @@ class PreviewPhotoScreen extends React.Component {
       textAlign: 'center',
       fontSize: 28
     }
-  })
+  });
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false
+    };
+  }
 
   _handleSendAction(){
     const{ photoToSend }=this.props;
