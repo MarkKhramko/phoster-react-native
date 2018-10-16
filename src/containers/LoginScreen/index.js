@@ -4,16 +4,19 @@ import {
   Alert,
   Flatlist,
   Keyboard,
+  KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
-  AsyncStorage
-} from 'react-native'
+} from 'react-native';
+import { Header } from 'react-navigation';
 import { LinearGradient } from 'expo';
 
 import Auth from '../../services/Auth';
 import GradientBackground from '../../components/GradientBackground';
+import KeyboardAvoiding from '../../components/KeyboardAvoiding';
 import RoundedButton from '../../components/RoundedButton';
 
 
@@ -86,34 +89,38 @@ class LoginScreen extends React.Component {
 
 
     return (
-      <GradientBackground style={styles.container}>
-        <Text style={styles.hintTitle}>
-          Для входа необходимо ввести ваш сотовый телефон.
-        </Text>
-        <TextInput
-          style={styles.inputField}
-          underlineColorAndroid='transparent'
-          placeholder="+7-999-999-99-99"
-          value={nickname}
-          onChangeText={(nickname) => this.setState({nickname})}
-        />
-        <TextInput
-          style={styles.inputField}
-          placeholder="Пароль"
-          value={password}
-          secureTextEntry
-          onChangeText={(password) => this.setState({password})}
-        />
-        <RoundedButton
-          width="60%"
-          onPress={this._handleLoginAction.bind(this)}
-          title="Войти"
-        />
-        <RoundedButton
-          width="74%"
-          onPress={() => navigate('RegisterScreen', {})}
-          title="Зарегестрироваться"
-        />
+      <GradientBackground style={ styles.container }>
+        <KeyboardAvoiding
+          style={ styles.innerContainer }
+        >
+          <Text style={ styles.hintTitle }>
+            Для входа необходимо ввести ваш сотовый телефон.
+          </Text>
+          <TextInput
+            style={ styles.inputField }
+            underlineColorAndroid='transparent'
+            placeholder="+7-999-999-99-99"
+            value={ nickname }
+            onChangeText={(nickname) => this.setState({nickname})}
+          />
+          <TextInput
+            style={ styles.inputField }
+            placeholder="Пароль"
+            value={ password }
+            secureTextEntry
+            onChangeText={(password) => this.setState({password})}
+          />
+          <RoundedButton
+            width="60%"
+            onPress={this._handleLoginAction.bind(this)}
+            title="Войти"
+          />
+          <RoundedButton
+            width="74%"
+            onPress={() => navigate('RegisterScreen', {})}
+            title="Зарегестрироваться"
+          />
+        </KeyboardAvoiding>
       </GradientBackground>
     );
   }
@@ -121,8 +128,10 @@ class LoginScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
+    flex: 1
+  },
+  innerContainer:{
+    flex: 1
   },
 
   hintTitle:{

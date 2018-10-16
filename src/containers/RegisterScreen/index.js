@@ -10,6 +10,7 @@ import {
 import { HeaderBackButton } from "react-navigation";
 
 import GradientBackground from '../../components/GradientBackground';
+import KeyboardAvoiding from '../../components/KeyboardAvoiding';
 import RoundedButton from '../../components/RoundedButton';
 
 import Auth from '../../services/Auth';
@@ -58,25 +59,29 @@ class RegisterScreen extends React.Component {
   render() {
     return (
       <GradientBackground style={styles.container}>
-        <Text style={styles.hintTitle}>
-          Для регистрации необходимо ввести ваш сотовый телефон.
-        </Text>
-        <TextInput
-          style={styles.inputField}
-          placeholder="+7-999-999-99-99"
-          onChangeText={(nickname) => this.setState({nickname})}
-        />
-        <TextInput
-          style={styles.inputField}
-          placeholder="Пароль"
-          secureTextEntry
-          onChangeText={(password) => this.setState({password})}
-        />
-        <RoundedButton
-          width="74%"
-          onPress={this._handleRegisterAction.bind(this)}
-          title="Зарегистрироваться"
-        />
+        <KeyboardAvoiding
+          style={ styles.innerContainer }
+        >
+          <Text style={styles.hintTitle}>
+            Для регистрации необходимо ввести ваш сотовый телефон.
+          </Text>
+          <TextInput
+            style={styles.inputField}
+            placeholder="+7-999-999-99-99"
+            onChangeText={(nickname) => this.setState({nickname})}
+          />
+          <TextInput
+            style={styles.inputField}
+            placeholder="Пароль"
+            secureTextEntry
+            onChangeText={(password) => this.setState({password})}
+          />
+          <RoundedButton
+            width="74%"
+            onPress={this._handleRegisterAction.bind(this)}
+            title="Зарегистрироваться"
+          />
+        </KeyboardAvoiding>
       </GradientBackground>
     );
   }
@@ -84,8 +89,10 @@ class RegisterScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center'
+    flex: 1
+  },
+  innerContainer:{
+    flex: 1
   },
 
   hintTitle:{
