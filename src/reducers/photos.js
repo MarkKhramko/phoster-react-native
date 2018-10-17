@@ -12,6 +12,9 @@ export function photos (state = initialState, action) {
         case photosActions.SET_CHOSEN_PHOTO:
             newState.chosenPhoto = action.chosenPhoto;
             return newState;
+        case photosActions.SET_ENCOUNTER_PHOTO:
+            // newState.chosenPhoto = action.chosenPhoto;
+            return newState;
         case photosActions.SET_PHOTO_TO_SEND:
             newState.photoToSend = action.photoToSend;
             return newState;

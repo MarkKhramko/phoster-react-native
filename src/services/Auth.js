@@ -16,7 +16,6 @@ async function saveToken(token){
 async function getToken(){
     try{
         const token = await AsyncStorage.getItem('token');
-        console.log(token);
         return token;
     }
     catch(exception) {

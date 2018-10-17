@@ -29,55 +29,55 @@ class ShowPhotoScreen extends React.Component {
   }
 
   _handleLikeAction(){
-    let { like } = this.state.like
-    console.log("123")
-    if (this.state.like == true) {
-      this.setState({ like, like: false })
-    }
-    else
-      this.setState({ like, like: true })
+    let { isLiked } = this.state;
+    isLiked = !isLiked;
+    this.setState({ isLiked });
   }
 
-  _renderMapView(){
+  _renderMapView(coords){
+    const latitude = coords.latitude;
+    const longitude = coords.longitude;
+    const hasCoordinates = latitude !== null && longitude !== null;
+
     const initialRegion = {
-      latitude: 37.78825,
-      longitude: -122.4324,
+      latitude: coords.latitude,
+      longitude: coords.longitude,
       latitudeDelta: 0.1522,
       longitudeDelta: 0.0521,
     };
 
     const coordinate = {
-      latitude: 38.73538,
-      longitude: -122.4324
+      latitude: coords.latitude,
+      longitude: coords.longitude
     };
 
     return(
       <MapView
         style={ styles.mapView }
-        initialRegion={ initialRegion }
+        initialRegion={ hasCoordinates ? initialRegion : null }
       >
-        <MapView.Marker
-          coordinate={ coordinate }
-          title={ "Маркер" }
-          description={ "Место снимка" }
-        />
+        { hasCoordinates ? 
+          <MapView.Marker
+            coordinate={ coordinate }
+            title={ "Маркер" }
+            description={ "Место снимка" }
+          />
+          : 
+          ""
+        }
       </MapView>
     );
   }
   
-  _renderLikeButton(){
-    const{
-      isLiked
-    }=this.state;
-
+  _renderLikeButton(isLiked){
     return(
       <TouchableOpacity 
         style={ styles.btn }
-        onPress={() => { this._handleLikeAction() }}
+        onPress={ () => { this._handleLikeAction() } }
       >
         <Image 
           style={ styles.icon }
-          source={ this.state.like === true ? like_enable : like_disable }
+          source={ this.state.isLiked === true ? like_enable : like_disable }
         />
       </TouchableOpacity>
     );
@@ -86,22 +86,29 @@ class ShowPhotoScreen extends React.Component {
   render() {
     const{ 
       chosenPhoto
-    }=this.props
+    }=this.props;
+    const{
+      isLiked
+    }=this.state;
 
     const uri = chosenPhoto.url;
+    const coords = {
+      latitude: chosenPhoto.latitude,
+      longitude: chosenPhoto.longitude
+    };
 
     return (
       <View style={ styles.container }>
         <View style={ styles.innerContainer }>
-          <TouchableOpacity onPress={() => { console.log("dasd") }}>
+          <TouchableOpacity onPress={() => {}}>
             <Image
               style={ styles.imagePreview }
               source={ {uri} }
             />
           </TouchableOpacity>
           <View style={ styles.line }/>
-          { this._renderMapView() }
-          { this._renderLikeButton() } 
+          { this._renderMapView(coords) }
+          { this._renderLikeButton(isLiked) } 
         </View> 
       </View>
     );

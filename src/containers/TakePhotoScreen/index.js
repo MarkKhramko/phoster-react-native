@@ -60,11 +60,19 @@ class TakePhotoScreen extends React.Component {
     });
   }
 
-  _takePicture(){
+  async _takePicture(){
+    const{ hasLocationPermission }=this.state;
     const cam = this.camera;
 
     if (!!cam) {
-      const location = Location.getCurrentPositionAsync({enableHighAccuracy: false});
+
+      let location = null;
+      if(hasLocationPermission){
+        location = await Location.getCurrentPositionAsync({enableHighAccuracy: false});
+      }
+
+      console.log({location1:location});
+
       cam.takePictureAsync()
       .then((data) => this._processPhoto(data, location))
       .catch((err)=> console.error(err));
@@ -77,12 +85,19 @@ class TakePhotoScreen extends React.Component {
       navigation
     }=this.props;
 
-    const data = {
-      ...photoData,
-      location
-    };
+    console.log({location2:location});
 
-    photosActions.setPhotoToSend(photoData);
+    let data = {...photoData };
+
+    if(location !== null){
+      data = {
+        ...data,
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
+      };
+    }
+
+    photosActions.setPhotoToSend(data);
     navigation.navigate('PreviewPhotoScreen');
   }
 

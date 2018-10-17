@@ -47,8 +47,6 @@ class LoginScreen extends React.Component {
         return console.log("LoginScreen error:", err);
       }
 
-      console.log({ isValid });
-
       if(isValid)
         this._handleSuccessfulLogin();
     }

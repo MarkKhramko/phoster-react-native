@@ -44,7 +44,11 @@ async function sendPhoto(photoData) {
 
         try{
             const rawResponse = await fetch(url, options);
-            return Promise.resolve(rawResponse.json());
+            const json = await rawResponse.json();
+            console.log({
+                json
+            });
+            return Promise.resolve({data:json});
         }
         catch(err){
             return Promise.reject(err);
