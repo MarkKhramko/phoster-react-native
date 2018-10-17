@@ -27,6 +27,8 @@ async function sendPhoto(photoData) {
             name: `photo.${fileType}`,
             type: `image/${fileType}`,
         });
+        formData.append('latitude', photoData.latitude);
+        formData.append('longitude', photoData.longitude);
 
         const url = `${APIConst.PHOTOS}`;
         

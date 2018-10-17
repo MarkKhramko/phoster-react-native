@@ -40,20 +40,18 @@ class PreviewPhotoScreen extends React.Component {
     const{ photoToSend }=this.props;
 
     PhotosService.sendPhoto(photoToSend)
-    .then((res)=>{
-      console.log({
-        res, 
-        data:res.data,
-        body:res.body
-      });
-
-      const isLoading = false;
-      this.setState({ isLoading });
-    })
+    .then((res)=> this._handleSuccessfulPhotoSend())
     .catch((err)=> console.log(err));
 
     const isLoading = true;
     this.setState({isLoading});
+  }
+
+  _handleSuccessfulPhotoSend(){
+    const isLoading = false;
+    this.setState({ isLoading });
+
+    this.props.navigation.navigate('MainScreen');
   }
 
   render() {

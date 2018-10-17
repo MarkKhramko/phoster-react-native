@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { 
   Camera,
+  Location,
   Permissions
 } from 'expo';
 import flip from './flip_camera.png'
@@ -19,20 +20,6 @@ import flash from './flash_enable.png'
 import photo from './take_photo.png'
 
 class TakePhotoScreen extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      hasCameraPermission: false,
-      cameraType: Camera.Constants.Type.back,
-      flashMode: Camera.Constants.FlashMode.off
-    };
-  }
-
-  async componentWillMount() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({ hasCameraPermission: status === 'granted' });
-  }
 
   static navigationOptions = ({navigation}) => ({
     headerStyle: {
@@ -51,25 +38,51 @@ class TakePhotoScreen extends React.Component {
     }
   })
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      hasCameraPermission: false,
+      hasLocationPermission: false,
+      cameraType: Camera.Constants.Type.back,
+      flashMode: Camera.Constants.FlashMode.off
+    };
+  }
+
+  async componentWillMount() {
+    const cameraPermissions = await Permissions.askAsync(Permissions.CAMERA);
+    const locationPermissions = await Permissions.askAsync(Permissions.LOCATION);
+
+    const hasCameraPermission = cameraPermissions.status === 'granted';
+    const hasLocationPermission = locationPermissions.status === 'granted';
+    this.setState({
+      hasCameraPermission,
+      hasLocationPermission
+    });
+  }
+
   _takePicture(){
     const cam = this.camera;
-    console.log('Check');
 
-    if(!!cam) {
+    if (!!cam) {
+      const location = Location.getCurrentPositionAsync({enableHighAccuracy: false});
       cam.takePictureAsync()
-      .then((data) => this._processPhoto(data))
+      .then((data) => this._processPhoto(data, location))
       .catch((err)=> console.error(err));
     }
   }
 
-  _processPhoto(photoData){
+  _processPhoto(photoData, location){
     const{
       photosActions,
       navigation
     }=this.props;
 
-    photosActions.setPhotoToSend(photoData);
+    const data = {
+      ...photoData,
+      location
+    };
 
+    photosActions.setPhotoToSend(photoData);
     navigation.navigate('PreviewPhotoScreen');
   }
 
@@ -92,7 +105,7 @@ class TakePhotoScreen extends React.Component {
       hasCameraPermission,
       cameraType,
       flashMode
-    } = this.state;
+    }=this.state;
 
     if (hasCameraPermission === null) {
       return <View />;
